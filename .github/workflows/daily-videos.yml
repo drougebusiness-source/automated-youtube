@@ -1,0 +1,59 @@
+name: Daily videos
+
+on:
+  schedule:
+    - cron: "17 9 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: daily-videos
+  cancel-in-progress: false
+
+jobs:
+  make-and-upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install ffmpeg
+        run: sudo apt-get update && sudo apt-get install -y ffmpeg fluidsynth fluid-soundfont-gm
+
+      - name: Install Python packages
+        run: pip install -r requirements.txt
+
+      - name: Make and upload today's videos
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: python -m ytauto run
+
+      - name: Save upload history
+        if: always()
+        run: |
+          git config user.name "daily-videos-bot"
+          git config user.email "daily-videos-bot@users.noreply.github.com"
+          git add state/history.json 2>/dev/null || exit 0
+          git commit -m "Upload history for $(date -u +%F)" || exit 0
+          git push
+
+      - name: Keep thumbnails and metadata for review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: review-${{ github.run_id }}
+          path: |
+            output/**/thumbnail.jpg
+            output/**/metadata.json
+          retention-days: 14
+          if-no-files-found: ignore
