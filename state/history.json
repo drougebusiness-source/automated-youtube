@@ -1,5 +1,5 @@
 {
-  "theme_index": 1,
+  "theme_index": 3,
   "videos": [
     {
       "publish_date": "2026-10-12",
@@ -10,6 +10,28 @@
       "made_at": "2026-10-12T03:21:42+00:00",
       "video_id": "ctykAr_ncAc",
       "url": "https://youtu.be/ctykAr_ncAc",
+      "publish_at": null
+    },
+    {
+      "publish_date": "2026-10-12",
+      "slot": 0,
+      "minutes": 60,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 1 Hour of Ambient Music for Studying & Focus",
+      "made_at": "2026-10-12T03:52:42+00:00",
+      "video_id": "UWDtRQweyuM",
+      "url": "https://youtu.be/UWDtRQweyuM",
+      "publish_at": null
+    },
+    {
+      "publish_date": "2026-10-12",
+      "slot": 1,
+      "minutes": 30,
+      "theme": "Ocean Meditation",
+      "title": "Ocean Meditation | 30 Minutes of Ambient Music for Meditation & Relaxation",
+      "made_at": "2026-10-12T03:55:49+00:00",
+      "video_id": "cHxr-79fg24",
+      "url": "https://youtu.be/cHxr-79fg24",
       "publish_at": null
     }
   ]
