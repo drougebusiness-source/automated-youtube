@@ -1,0 +1,135 @@
+# ---------------------------------------------------------------------------
+# Automated YouTube channel settings. This is the only file you need to edit.
+# ---------------------------------------------------------------------------
+
+channel:
+  name: "Rest and Relaxation"                 # used in descriptions and thumbnails
+  timezone: "America/New_York"       # times below are in this time zone
+  # Credit line added to every description. Keep it honest about how the music is made.
+  description_footer: |
+    All music on this channel is original and created for this channel, with the help of AI tools.
+    Free to listen to. Please don't re-upload.
+
+schedule:
+  # One video per entry, each with its own theme, music and artwork, so the
+  # uploads are never three cuts of the same thing.
+  videos:
+    - { minutes: 60, publish_at: "08:00" }
+    - { minutes: 30, publish_at: "13:00" }
+    - { minutes: 15, publish_at: "19:00" }
+  # Videos made today are published this many days later. 1 day gives you time
+  # to watch the review queue before anything goes public.
+  publish_days_ahead: 1
+
+upload:
+  enabled: true
+  # "scheduled": upload as private with a publish time; YouTube makes it public on its own.
+  # "private":   upload as private and stop. You publish each one by hand (review queue).
+  #              Use this until Google approves your API audit (see README, step 4).
+  mode: "private"
+  category_id: "10"                  # 10 = Music
+  made_for_kids: false
+  contains_synthetic_media: true     # YouTube's "altered or synthetic content" flag
+  default_language: "en"
+  # Optional: add each video to a playlist by length. Leave blank to skip.
+  playlists:
+    60: ""
+    30: ""
+    15: ""
+
+music:
+  # Where the music comes from:
+  #   procedural - generated on your computer from scratch. Free, no API key, 100% yours.
+  #                Good for meditation, sleep and ambient drones.
+  #   elevenlabs - AI-composed music from the ElevenLabs Music API (paid; check that your
+  #                plan includes commercial use). Best quality for most genres.
+  #   classical  - public-domain sheet music (MIDI files in assets/midi) rendered with a
+  #                SoundFont. You own the recording, so no Content ID claims from labels.
+  #   library    - audio files you put in assets/music_library (only music you own or
+  #                have a licence for).
+  source: "procedural"
+  track_minutes: 4                   # length of each generated track (elevenlabs: max 10)
+  crossfade_seconds: 8
+  target_lufs: -16                   # loudness YouTube expects for music
+  elevenlabs_model: ""               # blank = the API's default music model
+  soundfont: ""                      # classical only: path to a .sf2 file (see README)
+
+visuals:
+  # Where the background picture comes from:
+  #   procedural - soft gradient art drawn from the theme's colours. Free.
+  #   folder     - a random image from assets/backgrounds (your own AI or photo art).
+  #   openai     - generated per video with OpenAI's image API (needs OPENAI_API_KEY).
+  background_source: "procedural"
+  width: 1920
+  height: 1080
+  fps: 24
+  loop_seconds: 20                   # a slow, seamless zoom loop this long repeats for the whole video
+  zoom_amount: 0.05                  # 0 = still image
+  video_bitrate: "1500k"             # ~700 MB per hour; slow art doesn't need more
+
+metadata:
+  use_claude: true                   # needs ANTHROPIC_API_KEY; falls back to templates
+  model: "claude-opus-5-5"
+  max_tags: 15
+
+output:
+  keep_files_after_upload: false     # delete the large video files once uploaded
+
+# ---------------------------------------------------------------------------
+# Themes rotate in order, one per video. Add as many as you like.
+#   use           - what the video is for; finishes template titles when Claude is off
+#   music_prompt  - used by ElevenLabs
+#   image_prompt  - used by OpenAI images
+#   colors        - two hex colours for procedural art and thumbnails
+#   procedural    - settings for the free music generator:
+#       key: root note (C, C#, D, ... B)   scale: major | minor | pentatonic | dorian | lydian
+#       texture: none | rain | ocean | wind   bells: true/false   tempo: slow | very_slow
+# ---------------------------------------------------------------------------
+themes:
+  - name: "Deep Sleep"
+    use: "Sleep & Deep Rest"
+    mood: "deep, slow, warm drones for falling asleep"
+    music_prompt: "Ambient sleep music, warm evolving synth pads, very slow, no drums, no vocals, soft and dark, 50 BPM"
+    image_prompt: "A quiet bedroom window at night with moonlight and soft blue haze, painterly, no people, no text"
+    colors: ["#0b1d3a", "#3b5b92"]
+    procedural: { key: "D", scale: "minor", texture: "none", bells: false, tempo: "very_slow" }
+
+  - name: "Rainy Study"
+    use: "Studying & Focus"
+    mood: "cozy, focused, gentle rain"
+    music_prompt: "Calm ambient piano and soft pads with gentle rain sounds, for studying, no drums, no vocals"
+    image_prompt: "A cozy wooden desk by a rain-streaked window with a warm lamp, books, evening, painterly, no people, no text"
+    colors: ["#2b2a33", "#c08a4b"]
+    procedural: { key: "F", scale: "major", texture: "rain", bells: true, tempo: "slow" }
+
+  - name: "Ocean Meditation"
+    use: "Meditation & Relaxation"
+    mood: "breathing, waves, spacious calm"
+    music_prompt: "Meditation music, spacious pads, slow ocean waves, singing-bowl tones, no drums, no vocals"
+    image_prompt: "A calm ocean at dawn with soft pastel sky and gentle waves, minimalist, no people, no text"
+    colors: ["#0f3b4c", "#7fc8c2"]
+    procedural: { key: "A", scale: "pentatonic", texture: "ocean", bells: true, tempo: "very_slow" }
+
+  - name: "Morning Light"
+    use: "a Calm Morning"
+    mood: "hopeful, bright, gentle start to the day"
+    music_prompt: "Bright gentle ambient music with soft piano and warm strings, uplifting, slow, no drums, no vocals"
+    image_prompt: "Sunlight through a forest in the early morning with mist, soft golden light, painterly, no people, no text"
+    colors: ["#f2c46d", "#5a8f5b"]
+    procedural: { key: "G", scale: "lydian", texture: "none", bells: true, tempo: "slow" }
+
+  - name: "Forest Wind"
+    use: "Reading & Unwinding"
+    mood: "grounded, natural, quiet"
+    music_prompt: "Ambient nature music, soft wind, airy pads, distant flute-like tones, slow, no drums, no vocals"
+    image_prompt: "A mossy forest clearing with soft fog and green light, peaceful, painterly, no people, no text"
+    colors: ["#183a2b", "#8bb174"]
+    procedural: { key: "E", scale: "dorian", texture: "wind", bells: false, tempo: "slow" }
+
+  - name: "Starlight Focus"
+    use: "Deep Focus & Work"
+    mood: "clear, steady, deep focus"
+    music_prompt: "Minimal ambient electronic music for deep focus, steady soft pulses, warm pads, no vocals"
+    image_prompt: "A night sky full of stars over calm mountains, deep blue and violet, minimalist, no people, no text"
+    colors: ["#1a1446", "#8a6fd1"]
+    procedural: { key: "C", scale: "pentatonic", texture: "none", bells: true, tempo: "slow" }
