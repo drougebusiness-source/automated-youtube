@@ -1,0 +1,40 @@
+{
+  "items": [
+    {
+      "publish_date": "2026-10-14",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 1 Hour of Classical Piano for Sleep & Deep Rest \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-14/0-60min-deep-sleep",
+      "painting": 56905,
+      "painting_credit": "Artwork: \"Nocturne: Blue and Gold\u2014Southampton Water\" by James McNeill Whistler (1872). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/56905",
+      "video_id": "jeL1tTCI_xA"
+    },
+    {
+      "publish_date": "2026-10-14",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 30 Minutes of Calm Classical Piano for Studying & Focus \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-14/1-30min-rainy-study",
+      "painting": 20684,
+      "painting_credit": "Artwork: \"Paris Street; Rainy Day\" by Gustave Caillebotte (1877). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/20684",
+      "video_id": "ofBsNIqC8-0"
+    },
+    {
+      "publish_date": "2026-10-14",
+      "slot": 2,
+      "publish_at": "19:00",
+      "minutes": 15,
+      "theme": "Ocean Meditation",
+      "title": "15 Minutes of Ocean Meditation Classical Music | Peaceful Background Music \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-14/2-15min-ocean-meditation",
+      "painting": 14598,
+      "painting_credit": "Artwork: \"The Beach at Sainte-Adresse\" by Claude Monet (1867). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/14598",
+      "video_id": "Mf0Ri5uksKw"
+    }
+  ]
+}

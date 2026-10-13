@@ -1,5 +1,5 @@
 {
-  "theme_index": 6,
+  "theme_index": 9,
   "videos": [
     {
       "publish_date": "2026-10-12",
@@ -67,5 +67,10 @@
       "url": "https://youtu.be/34bejo-oP5o",
       "publish_at": null
     }
+  ],
+  "paintings_used": [
+    56905,
+    20684,
+    14598
   ]
 }
