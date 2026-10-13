@@ -7,8 +7,7 @@ channel:
   timezone: "America/New_York"       # times below are in this time zone
   # Credit line added to every description. Keep it honest about how the music is made.
   description_footer: |
-    All music on this channel is original and created for this channel, with the help of AI tools.
-    Free to listen to. Please don't re-upload.
+    Rest and Relaxation: timeless classical music and art, for sleep, study and calm.
 
 schedule:
   # One video per entry, each with its own theme, music and artwork, so the
@@ -39,6 +38,9 @@ upload:
 
 music:
   # Where the music comes from:
+  #   classical_pd - real classical recordings (Chopin, Bach, Schubert, Brahms, Grieg...) that
+  #                Musopen dedicated to the public domain, picked per theme in assets/music.json.
+  #                Free for commercial use. Every description gets a timestamped tracklist.
   #   procedural - generated on your computer from scratch. Free, no API key, 100% yours.
   #                Good for meditation, sleep and ambient drones.
   #   elevenlabs - AI-composed music from the ElevenLabs Music API (paid; check that your
@@ -47,22 +49,25 @@ music:
   #                SoundFont. You own the recording, so no Content ID claims from labels.
   #   library    - audio files you put in assets/music_library (only music you own or
   #                have a licence for).
-  source: "procedural"
+  source: "classical_pd"
   track_minutes: 4                   # length of each generated track (elevenlabs: max 10)
-  crossfade_seconds: 8
+  crossfade_seconds: 3               # overlap between pieces
   target_lufs: -16                   # loudness YouTube expects for music
   elevenlabs_model: ""               # blank = the API's default music model
   soundfont: ""                      # classical only: path to a .sf2 file (see README)
 
 visuals:
   # Where the background picture comes from:
+  #   paintings  - famous public-domain paintings (Art Institute of Chicago, CC0) chosen to fit
+  #                each theme, with a slow pan across the canvas. Credited in every description.
   #   procedural - soft gradient art drawn from the theme's colours. Free.
   #   folder     - a random image from assets/backgrounds (your own AI or photo art).
   #   openai     - generated per video with OpenAI's image API (needs OPENAI_API_KEY).
-  background_source: "procedural"
+  background_source: "paintings"
   width: 1920
   height: 1080
   fps: 24
+  pan_seconds: 60                    # paintings: seconds for one glide across the canvas (then it glides back)
   loop_seconds: 20                   # a slow, seamless zoom loop this long repeats for the whole video
   zoom_amount: 0.05                  # 0 = still image
   video_bitrate: "1500k"             # ~700 MB per hour; slow art doesn't need more
@@ -88,7 +93,9 @@ output:
 themes:
   - name: "Deep Sleep"
     use: "Sleep & Deep Rest"
-    mood: "deep, slow, warm drones for falling asleep"
+    style: "Classical Piano"
+    mood: "Chopin's gentlest nocturnes and preludes for drifting off to sleep"
+    tags: ["chopin nocturnes", "classical piano for sleep", "sleep music piano"]
     music_prompt: "Ambient sleep music, warm evolving synth pads, very slow, no drums, no vocals, soft and dark, 50 BPM"
     image_prompt: "A quiet bedroom window at night with moonlight and soft blue haze, painterly, no people, no text"
     colors: ["#0b1d3a", "#3b5b92"]
@@ -96,7 +103,9 @@ themes:
 
   - name: "Rainy Study"
     use: "Studying & Focus"
-    mood: "cozy, focused, gentle rain"
+    style: "Classical Piano"
+    mood: "Chopin and Schubert piano music for a quiet, rainy afternoon of study"
+    tags: ["chopin raindrop prelude", "classical music for studying", "rainy day piano"]
     music_prompt: "Calm ambient piano and soft pads with gentle rain sounds, for studying, no drums, no vocals"
     image_prompt: "A cozy wooden desk by a rain-streaked window with a warm lamp, books, evening, painterly, no people, no text"
     colors: ["#2b2a33", "#c08a4b"]
@@ -104,7 +113,9 @@ themes:
 
   - name: "Ocean Meditation"
     use: "Meditation & Relaxation"
-    mood: "breathing, waves, spacious calm"
+    style: "Classical Music"
+    mood: "slow, flowing orchestral and piano music, like waves on a calm shore"
+    tags: ["mendelssohn hebrides", "calm classical music", "meditation classical music"]
     music_prompt: "Meditation music, spacious pads, slow ocean waves, singing-bowl tones, no drums, no vocals"
     image_prompt: "A calm ocean at dawn with soft pastel sky and gentle waves, minimalist, no people, no text"
     colors: ["#0f3b4c", "#7fc8c2"]
@@ -112,7 +123,9 @@ themes:
 
   - name: "Morning Light"
     use: "a Calm Morning"
-    mood: "hopeful, bright, gentle start to the day"
+    style: "Classical Music"
+    mood: "Grieg's Morning Mood, Bach and gentle string music to start the day"
+    tags: ["morning mood grieg", "morning classical music", "bach goldberg variations"]
     music_prompt: "Bright gentle ambient music with soft piano and warm strings, uplifting, slow, no drums, no vocals"
     image_prompt: "Sunlight through a forest in the early morning with mist, soft golden light, painterly, no people, no text"
     colors: ["#f2c46d", "#5a8f5b"]
@@ -120,7 +133,9 @@ themes:
 
   - name: "Forest Wind"
     use: "Reading & Unwinding"
-    mood: "grounded, natural, quiet"
+    style: "Classical Music"
+    mood: "pastoral strings and orchestral music, from Smetana's Moldau to Dvorak"
+    tags: ["smetana moldau", "dvorak american quartet", "nature classical music"]
     music_prompt: "Ambient nature music, soft wind, airy pads, distant flute-like tones, slow, no drums, no vocals"
     image_prompt: "A mossy forest clearing with soft fog and green light, peaceful, painterly, no people, no text"
     colors: ["#183a2b", "#8bb174"]
@@ -128,7 +143,9 @@ themes:
 
   - name: "Starlight Focus"
     use: "Deep Focus & Work"
-    mood: "clear, steady, deep focus"
+    style: "Classical Piano"
+    mood: "Bach's Goldberg Variations and Schubert sonatas for calm, steady focus"
+    tags: ["bach goldberg variations", "classical music for focus", "schubert piano"]
     music_prompt: "Minimal ambient electronic music for deep focus, steady soft pulses, warm pads, no vocals"
     image_prompt: "A night sky full of stars over calm mountains, deep blue and violet, minimalist, no people, no text"
     colors: ["#1a1446", "#8a6fd1"]

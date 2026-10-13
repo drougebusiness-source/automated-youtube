@@ -1,0 +1,762 @@
+{
+ "source": "Musopen (musopen.org) recordings, dedicated to the public domain by Musopen (CC0 / Public Domain Mark), hosted on the Internet Archive",
+ "collections": {
+  "musopen-chopin": {
+   "license": "CC0 1.0",
+   "url": "https://archive.org/details/musopen-chopin"
+  },
+  "MusopenCollectionAsFlac": {
+   "license": "Public Domain Mark 1.0",
+   "url": "https://archive.org/details/MusopenCollectionAsFlac"
+  }
+ },
+ "themes": {
+  "Deep Sleep": [
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 9 no. 2 in E flat major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in E-flat major, Op. 9 No. 2",
+    "seconds": 276
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "NocturneOp.9No.1InBFlatMinor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in B-flat minor, Op. 9 No. 1",
+    "seconds": 337
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "NocturneOp.9No.3.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in B major, Op. 9 No. 3",
+    "seconds": 417
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 15 no. 1 In F major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in F major, Op. 15 No. 1",
+    "seconds": 305
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 27 no. 1 in C sharp minor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in C-sharp minor, Op. 27 No. 1",
+    "seconds": 352
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "NocturneOp27No2.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in D-flat major, Op. 27 No. 2",
+    "seconds": 377
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 32 no. 1 in B major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in B major, Op. 32 No. 1",
+    "seconds": 301
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 32 no. 2 in A flat major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in A-flat major, Op. 32 No. 2",
+    "seconds": 343
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 48 no. 2 in F sharp minor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in F-sharp minor, Op. 48 No. 2",
+    "seconds": 496
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 55 no. 1 in F minor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in F minor, Op. 55 No. 1",
+    "seconds": 316
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 55 no. 2 in E flat major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in E-flat major, Op. 55 No. 2",
+    "seconds": 309
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 62 no. 2 in E major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in E major, Op. 62 No. 2",
+    "seconds": 339
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "NocturneOp.72No.1InEMinor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in E minor, Op. 72 No. 1",
+    "seconds": 272
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne B. 49 in C sharp minor 'Lento con gran espressione' (1).mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in C-sharp minor, B. 49 (Lento con gran espressione)",
+    "seconds": 238
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne B. 108 in C minor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in C minor, B. 108",
+    "seconds": 193
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 13.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in F-sharp major, Op. 28 No. 13",
+    "seconds": 167
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 6.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in B minor, Op. 28 No. 6",
+    "seconds": 108
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 17.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in A-flat major, Op. 28 No. 17",
+    "seconds": 180
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 15.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in D-flat major, Op. 28 No. 15 \"Raindrop\"",
+    "seconds": 295
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Borodin_StringQuartetNo.2inDMajor/AlexanderBorodin-StringQuartetNo.2InDMajor-03-NocturneAndante.mp3",
+    "composer": "Alexander Borodin",
+    "title": "String Quartet No. 2 in D major: III. Nocturne",
+    "seconds": 547
+   }
+  ],
+  "Rainy Study": [
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 15.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in D-flat major, Op. 28 No. 15 \"Raindrop\"",
+    "seconds": 295
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 13.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in F-sharp major, Op. 28 No. 13",
+    "seconds": 167
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 17.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in A-flat major, Op. 28 No. 17",
+    "seconds": 180
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 6.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in B minor, Op. 28 No. 6",
+    "seconds": 108
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 7.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in A major, Op. 28 No. 7",
+    "seconds": 155
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 21.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in B-flat major, Op. 28 No. 21",
+    "seconds": 115
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 24.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in D minor, Op. 28 No. 24",
+    "seconds": 157
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Prelude Op. 28 no. 19.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Prelude in E-flat major, Op. 28 No. 19",
+    "seconds": 257
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 9 no. 2 in E flat major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in E-flat major, Op. 9 No. 2",
+    "seconds": 276
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "NocturneOp.9No.1InBFlatMinor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in B-flat minor, Op. 9 No. 1",
+    "seconds": 337
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "NocturneOp.9No.3.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in B major, Op. 9 No. 3",
+    "seconds": 417
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 15 no. 1 In F major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in F major, Op. 15 No. 1",
+    "seconds": 305
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 27 no. 1 in C sharp minor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in C-sharp minor, Op. 27 No. 1",
+    "seconds": 352
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "NocturneOp27No2.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in D-flat major, Op. 27 No. 2",
+    "seconds": 377
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 32 no. 1 in B major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in B major, Op. 32 No. 1",
+    "seconds": 301
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 32 no. 2 in A flat major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in A-flat major, Op. 32 No. 2",
+    "seconds": 343
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMajorD.664/FranzSchubert-SonataInAMajorD.664-02-Andante.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A major, D. 664: II. Andante",
+    "seconds": 290
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.784/FranzSchubert-SonataInAMinorD.784-02-Andante.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A minor, D. 784: II. Andante",
+    "seconds": 229
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.845/FranzSchubert-SonataInAMinorD.845-02-AndantePocoMosso.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A minor, D. 845: II. Andante poco mosso",
+    "seconds": 784
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.959/FranzSchubert-SonataInAMinorD.959-02-Andantino.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A major, D. 959: II. Andantino",
+    "seconds": 546
+   }
+  ],
+  "Ocean Meditation": [
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mendelssohn_Hebrides/FelixMendelssohn-HebridesOvertureFingalsCave.mp3",
+    "composer": "Felix Mendelssohn",
+    "title": "The Hebrides Overture (Fingal's Cave)",
+    "seconds": 682
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mendelssohn_ScottishSymphony/FelixMendelssohn-SymphonyNo.3InAMinorscottishOp.56-03-Adagio.mp3",
+    "composer": "Felix Mendelssohn",
+    "title": "Symphony No. 3 \"Scottish\", Op. 56: III. Adagio",
+    "seconds": 571
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Brahms_SymphonyNo.2inDMajor/JohannesBrahms-SymphonyNo.2InDMajorOp.73-02-AdagioNonToppo.mp3",
+    "composer": "Johannes Brahms",
+    "title": "Symphony No. 2 in D major, Op. 73: II. Adagio non troppo",
+    "seconds": 556
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Brahms_SymphonyNo.1inCMinor/JohannesBrahms-SymphonyNo.1InCMinorOp.68-02-AndanteSostenuto.mp3",
+    "composer": "Johannes Brahms",
+    "title": "Symphony No. 1 in C minor, Op. 68: II. Andante sostenuto",
+    "seconds": 517
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Suk_Meditation/JosefSuk-Meditation.mp3",
+    "composer": "Josef Suk",
+    "title": "Meditation on the Old Czech Chorale \"St. Wenceslas\"",
+    "seconds": 405
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Dvorak_StringQuartetNo.12inFMajorOp.96/AntonnDvorak-StringQuartetNo.12InFMajorOp.96American-02-Lento.mp3",
+    "composer": "Antonín Dvořák",
+    "title": "String Quartet No. 12 \"American\", Op. 96: II. Lento",
+    "seconds": 471
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Dvorak_StringQuartetNo.10inEFlatOp.51/AntonnDvorak-StringQuartetNo.10InEFlatOp.51-03-Romanza.mp3",
+    "composer": "Antonín Dvořák",
+    "title": "String Quartet No. 10, Op. 51: III. Romanza",
+    "seconds": 367
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.845/FranzSchubert-SonataInAMinorD.845-02-AndantePocoMosso.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A minor, D. 845: II. Andante poco mosso",
+    "seconds": 784
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.959/FranzSchubert-SonataInAMinorD.959-02-Andantino.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A major, D. 959: II. Andantino",
+    "seconds": 546
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInCMinorD.958/FranzSchubert-SonataInCMinorD.958-02-Adagio.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in C minor, D. 958: II. Adagio",
+    "seconds": 468
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 48 no. 2 in F sharp minor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in F-sharp minor, Op. 48 No. 2",
+    "seconds": 496
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 55 no. 1 in F minor.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in F minor, Op. 55 No. 1",
+    "seconds": 316
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 55 no. 2 in E flat major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in E-flat major, Op. 55 No. 2",
+    "seconds": 309
+   },
+   {
+    "collection": "musopen-chopin",
+    "file": "Nocturne Op. 62 no. 2 in E major.mp3",
+    "composer": "Frédéric Chopin",
+    "title": "Nocturne in E major, Op. 62 No. 2",
+    "seconds": 339
+   }
+  ],
+  "Morning Light": [
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Greig_PeerGynt/EdvardGrieg-PeerGyntSuiteNo.1Op.46-01-Morning.mp3",
+    "composer": "Edvard Grieg",
+    "title": "Peer Gynt Suite No. 1: Morning Mood",
+    "seconds": 229
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Aria",
+    "seconds": 292
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Haydn_StringQuartetInDMajorOp.64/JosephHaydn-StringQuartetInDOp.645H363Lark-02-AdagioCantabile.mp3",
+    "composer": "Joseph Haydn",
+    "title": "String Quartet in D major \"The Lark\", Op. 64 No. 5: II. Adagio cantabile",
+    "seconds": 291
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mendelssohn_ItalianSymphony/FelixMendelssohn-SymphonyNo.4InAMajorOp.90italian-02-AndanteConMoto.mp3",
+    "composer": "Felix Mendelssohn",
+    "title": "Symphony No. 4 \"Italian\", Op. 90: II. Andante con moto",
+    "seconds": 347
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Brahms_SymphonyNo.2inDMajor/JohannesBrahms-SymphonyNo.2InDMajorOp.73-02-AdagioNonToppo.mp3",
+    "composer": "Johannes Brahms",
+    "title": "Symphony No. 2 in D major, Op. 73: II. Adagio non troppo",
+    "seconds": 556
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Brahms_SymphonyNo.3inFMajor/JohannesBrahms-SymphonyNo.3InFMajorOp.90-02-Andante.mp3",
+    "composer": "Johannes Brahms",
+    "title": "Symphony No. 3 in F major, Op. 90: II. Andante",
+    "seconds": 529
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-14-GoldbergVariationsBwv.988-Variation13.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 13",
+    "seconds": 338
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-16-GoldbergVariationsBwv.988-Variation15.CanonOnTheFifth.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 15 (Canon at the Fifth)",
+    "seconds": 286
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-22-GoldbergVariationsBwv.988-Variation21.CanonOnTheSeventh.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 21 (Canon at the Seventh)",
+    "seconds": 97
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-26-GoldbergVariationsBwv.988-Variation25.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 25",
+    "seconds": 410
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-04-GoldbergVariationsBwv.988-Variation3.CanonOnTheUnison.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 3 (Canon at the Unison)",
+    "seconds": 113
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-13-GoldbergVariationsBwv.988-Variation12.CanonOnTheFourth.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 12 (Canon at the Fourth)",
+    "seconds": 153
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMajorD.664/FranzSchubert-SonataInAMajorD.664-02-Andante.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A major, D. 664: II. Andante",
+    "seconds": 290
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.784/FranzSchubert-SonataInAMinorD.784-02-Andante.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A minor, D. 784: II. Andante",
+    "seconds": 229
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mozart_StringQuartetNo.19inCMajorK465/WolfgangAmadeusMozart-StringQuartetNo.19InCK465Dissonance-02-AndanteCantabile.mp3",
+    "composer": "Wolfgang Amadeus Mozart",
+    "title": "String Quartet No. 19 \"Dissonance\", K. 465: II. Andante cantabile",
+    "seconds": 461
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.959/FranzSchubert-SonataInAMinorD.959-02-Andantino.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A major, D. 959: II. Andantino",
+    "seconds": 546
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInEFlatMajorD.568/FranzSchubert-SonataInEFlatMajorD.568-02-AndanteMolto.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in E-flat major, D. 568: II. Andante molto",
+    "seconds": 417
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Dvorak_StringQuartetNo.10inEFlatOp.51/AntonnDvorak-StringQuartetNo.10InEFlatOp.51-03-Romanza.mp3",
+    "composer": "Antonín Dvořák",
+    "title": "String Quartet No. 10, Op. 51: III. Romanza",
+    "seconds": 367
+   }
+  ],
+  "Forest Wind": [
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Smetana_Vltava/BedichSmetana-MVlast-Vltava.mp3",
+    "composer": "Bedřich Smetana",
+    "title": "Má vlast: Vltava (The Moldau)",
+    "seconds": 770
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Borodin_InTheSteppesOfCentralAsia/AlexanderBorodin-InTheSteppesOfCentralAsia.mp3",
+    "composer": "Alexander Borodin",
+    "title": "In the Steppes of Central Asia",
+    "seconds": 458
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Dvorak_StringQuartetNo.12inFMajorOp.96/AntonnDvorak-StringQuartetNo.12InFMajorOp.96American-02-Lento.mp3",
+    "composer": "Antonín Dvořák",
+    "title": "String Quartet No. 12 \"American\", Op. 96: II. Lento",
+    "seconds": 471
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Beethoven_StringQuartetNo.6inBFlatMajorOp.18/LudwigVanBeethoven-StringQuartetNo.6InBFlatMajorOp.18No.6-02-AdagioMaNonTroppo.mp3",
+    "composer": "Ludwig van Beethoven",
+    "title": "String Quartet No. 6, Op. 18 No. 6: II. Adagio ma non troppo",
+    "seconds": 421
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mendelssohn_StringQuartetNo.6inFMinorOp.80/FelixMendelssohn-StringQuartetNo.6InFMinorOp.80-03-Adagio.mp3",
+    "composer": "Felix Mendelssohn",
+    "title": "String Quartet No. 6 in F minor, Op. 80: III. Adagio",
+    "seconds": 486
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Brahms_SymphonyNo.3inFMajor/JohannesBrahms-SymphonyNo.3InFMajorOp.90-02-Andante.mp3",
+    "composer": "Johannes Brahms",
+    "title": "Symphony No. 3 in F major, Op. 90: II. Andante",
+    "seconds": 529
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Brahms_SymphonyNo.3inFMajor/JohannesBrahms-SymphonyNo.3InFMajorOp.90-03-PocoAllegretto.mp3",
+    "composer": "Johannes Brahms",
+    "title": "Symphony No. 3 in F major, Op. 90: III. Poco allegretto",
+    "seconds": 370
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mozart_SymphonyNo.40inGMinor/WolfgangAmadeusMozart-SymphonyNo.40InGMinorK.550-02-Andante.mp3",
+    "composer": "Wolfgang Amadeus Mozart",
+    "title": "Symphony No. 40 in G minor, K. 550: II. Andante",
+    "seconds": 456
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInCMinorD.958/FranzSchubert-SonataInCMinorD.958-02-Adagio.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in C minor, D. 958: II. Adagio",
+    "seconds": 468
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInEFlatMajorD.568/FranzSchubert-SonataInEFlatMajorD.568-02-AndanteMolto.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in E-flat major, D. 568: II. Andante molto",
+    "seconds": 417
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInDMajorD.850/FranzSchubert-SonataInDMajorD.850-02-ConMoto.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in D major, D. 850: II. Con moto",
+    "seconds": 726
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Borodin_StringQuartetNo.1inAMajor/AlexanderBorodin-StringQuartetNo.1InAMajor-02-AndanteConMoto.mp3",
+    "composer": "Alexander Borodin",
+    "title": "String Quartet No. 1 in A major: II. Andante con moto",
+    "seconds": 517
+   }
+  ],
+  "Starlight Focus": [
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-01-GoldbergVariationsBwv.988-Aria.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Aria",
+    "seconds": 292
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-14-GoldbergVariationsBwv.988-Variation13.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 13",
+    "seconds": 338
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-16-GoldbergVariationsBwv.988-Variation15.CanonOnTheFifth.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 15 (Canon at the Fifth)",
+    "seconds": 286
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-22-GoldbergVariationsBwv.988-Variation21.CanonOnTheSeventh.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 21 (Canon at the Seventh)",
+    "seconds": 97
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-26-GoldbergVariationsBwv.988-Variation25.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 25",
+    "seconds": 410
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-04-GoldbergVariationsBwv.988-Variation3.CanonOnTheUnison.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 3 (Canon at the Unison)",
+    "seconds": 113
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-13-GoldbergVariationsBwv.988-Variation12.CanonOnTheFourth.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 12 (Canon at the Fourth)",
+    "seconds": 153
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-19-GoldbergVariationsBwv.988-Variation18.CanonOnTheSixth.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 18 (Canon at the Sixth)",
+    "seconds": 88
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-25-GoldbergVariationsBwv.988-Variation24.CanonOnTheOctave.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 24 (Canon at the Octave)",
+    "seconds": 165
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-08-GoldbergVariationsBwv.988-Variation7.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 7",
+    "seconds": 174
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-10-GoldbergVariationsBwv.988-Variation9.CanonOnTheThird.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 9 (Canon at the Third)",
+    "seconds": 99
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Bach_GoldbergVariations/JohannSebastianBach-31-GoldbergVariationsBwv.988-Variation30.Quodlibet.mp3",
+    "composer": "Johann Sebastian Bach",
+    "title": "Goldberg Variations, BWV 988: Variation 30 (Quodlibet)",
+    "seconds": 102
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMajorD.664/FranzSchubert-SonataInAMajorD.664-02-Andante.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A major, D. 664: II. Andante",
+    "seconds": 290
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.784/FranzSchubert-SonataInAMinorD.784-02-Andante.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A minor, D. 784: II. Andante",
+    "seconds": 229
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.845/FranzSchubert-SonataInAMinorD.845-02-AndantePocoMosso.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A minor, D. 845: II. Andante poco mosso",
+    "seconds": 784
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInAMinorD.959/FranzSchubert-SonataInAMinorD.959-02-Andantino.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in A major, D. 959: II. Andantino",
+    "seconds": 546
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInCMinorD.958/FranzSchubert-SonataInCMinorD.958-02-Adagio.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in C minor, D. 958: II. Adagio",
+    "seconds": 468
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInEFlatMajorD.568/FranzSchubert-SonataInEFlatMajorD.568-02-AndanteMolto.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in E-flat major, D. 568: II. Andante molto",
+    "seconds": 417
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Schubert_SonataInDMajorD.850/FranzSchubert-SonataInDMajorD.850-02-ConMoto.mp3",
+    "composer": "Franz Schubert",
+    "title": "Piano Sonata in D major, D. 850: II. Con moto",
+    "seconds": 726
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mozart_StringQuartetNo.15inDMinorK421/WolfgangAmadeusMozart-StringQuartetNo.15InDMinorK421-02-Andante.mp3",
+    "composer": "Wolfgang Amadeus Mozart",
+    "title": "String Quartet No. 15 in D minor, K. 421: II. Andante",
+    "seconds": 315
+   },
+   {
+    "collection": "MusopenCollectionAsFlac",
+    "file": "Mozart_StringQuartetNo.19inCMajorK465/WolfgangAmadeusMozart-StringQuartetNo.19InCK465Dissonance-02-AndanteCantabile.mp3",
+    "composer": "Wolfgang Amadeus Mozart",
+    "title": "String Quartet No. 19 \"Dissonance\", K. 465: II. Andante cantabile",
+    "seconds": 461
+   }
+  ]
+ }
+}

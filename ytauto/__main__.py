@@ -19,6 +19,15 @@ def main() -> int:
     p_run.add_argument("--test", action="store_true", help="quick 1-minute versions, no upload")
     p_run.add_argument("--date", help="pretend today is YYYY-MM-DD")
     p_run.add_argument("--only", type=int, help="only make this slot (0 = first video in schedule)")
+    p_batch = sub.add_parser("batch", help="make several days of videos at once and upload them as private")
+    p_batch.add_argument("--days", type=int, default=14, help="how many days of videos to make (default 14)")
+    p_batch.add_argument("--no-upload", action="store_true", help="only make the videos")
+    p_batch.add_argument("--start", help="first schedule date YYYY-MM-DD (default: tomorrow)")
+    p_batch.add_argument("--stop-at-limit", action="store_true",
+                         help="stop making videos once YouTube's daily upload limit is reached")
+    sub.add_parser("upload-pending", help="upload batch videos that are still waiting")
+    p_sample = sub.add_parser("samples", help="make short previews of each theme to compare")
+    p_sample.add_argument("--seconds", type=int, default=60)
     sub.add_parser("status", help="show recent uploads")
     args = parser.parse_args()
 
@@ -38,6 +47,19 @@ def main() -> int:
         for v in load_state(cfg)["videos"][-15:]:
             print(f"{v['publish_date']}  {v['minutes']:>3} min  {v['theme']:<18} {v.get('url', '(not uploaded)')}  {v['title']}")
         return 0
+
+    if args.cmd == "batch":
+        from .batch import run_batch
+        ok = run_batch(cfg, args.days, upload=not args.no_upload,
+                       start=date.fromisoformat(args.start) if args.start else None,
+                       stop_at_limit=args.stop_at_limit)
+        return 0 if ok else 1
+    if args.cmd == "upload-pending":
+        from .batch import upload_pending
+        return 0 if upload_pending(cfg) else 1
+    if args.cmd == "samples":
+        from .samples import make_samples
+        return 0 if make_samples(cfg, args.seconds) else 1
 
     from .pipeline import run
     ok = run(cfg, upload=not args.no_upload, test=args.test,

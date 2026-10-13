@@ -1,0 +1,109 @@
+name: Batch videos
+
+# Makes several days of videos at once and uploads them as private. Run it from the
+# Actions tab ("Run workflow"). If YouTube's daily upload limit is reached, it stops and
+# saves its progress; it then runs again by itself each day until the batch is finished.
+on:
+  workflow_dispatch:
+    inputs:
+      days:
+        description: "How many days of videos to make"
+        default: "14"
+      start:
+        description: "First schedule date (YYYY-MM-DD). Leave empty for tomorrow."
+        default: ""
+  schedule:
+    - cron: "41 10 * * *"   # daily: continue an unfinished batch (does nothing once it's done)
+
+permissions:
+  contents: write
+
+concurrency:
+  group: batch-videos
+  cancel-in-progress: false
+
+jobs:
+  batch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Is there a batch to make or continue?
+        id: plan
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run=yes" >> "$GITHUB_OUTPUT"
+            echo "days=${{ inputs.days }}" >> "$GITHUB_OUTPUT"
+            echo "start=${{ inputs.start }}" >> "$GITHUB_OUTPUT"
+          elif [ -f state/batch_request.json ]; then
+            echo "run=yes" >> "$GITHUB_OUTPUT"
+            echo "days=$(python3 -c "import json;print(json.load(open('state/batch_request.json'))['days'])")" >> "$GITHUB_OUTPUT"
+            echo "start=$(python3 -c "import json;print(json.load(open('state/batch_request.json'))['start'])")" >> "$GITHUB_OUTPUT"
+          else
+            echo "run=no" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/setup-python@v5
+        if: steps.plan.outputs.run == 'yes'
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install ffmpeg and Python packages
+        if: steps.plan.outputs.run == 'yes'
+        run: |
+          sudo apt-get update && sudo apt-get install -y ffmpeg
+          pip install -r requirements.txt
+
+      - name: Reuse downloaded music and paintings
+        if: steps.plan.outputs.run == 'yes'
+        uses: actions/cache@v4
+        with:
+          path: |
+            assets/music_cache
+            assets/painting_cache
+          key: media-${{ hashFiles('assets/music.json', 'assets/paintings.json') }}
+
+      - name: Make and upload videos
+        if: steps.plan.outputs.run == 'yes'
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          START="${{ steps.plan.outputs.start }}"
+          if [ -z "$START" ]; then START=$(TZ="$(python3 -c "import yaml;print(yaml.safe_load(open('config.yaml'))['channel']['timezone'])")" date -d tomorrow +%F); fi
+          DAYS="${{ steps.plan.outputs.days }}"
+          echo "{\"days\": $DAYS, \"start\": \"$START\"}" > state/batch_request.json
+          python -m ytauto batch --days "$DAYS" --start "$START" --stop-at-limit
+          # Finished when every video is uploaded: stop the daily continuation.
+          python3 -c "
+          import json, sys
+          d = json.load(open('state/batch.json'))
+          done = sum(1 for i in d['items'] if i.get('video_id'))
+          need = $DAYS * len(__import__('yaml').safe_load(open('config.yaml'))['schedule']['videos'])
+          print(f'{done}/{need} uploaded')
+          sys.exit(0 if done >= need else 3)
+          " && rm -f state/batch_request.json || true
+
+      - name: Save progress
+        if: always() && steps.plan.outputs.run == 'yes'
+        run: |
+          git config user.name "daily-videos-bot"
+          git config user.email "daily-videos-bot@users.noreply.github.com"
+          git add -A state/ 2>/dev/null || true
+          git commit -m "Batch progress $(date -u +%F)" || exit 0
+          git pull --rebase --autostash || true
+          git push
+
+      - name: Keep the upload list
+        if: always() && steps.plan.outputs.run == 'yes'
+        uses: actions/upload-artifact@v4
+        with:
+          name: upload-list-${{ github.run_id }}
+          path: |
+            output/batch/UPLOAD_LIST.csv
+            output/**/title_and_description.txt
+            output/**/thumbnail.jpg
+          retention-days: 30
+          if-no-files-found: ignore

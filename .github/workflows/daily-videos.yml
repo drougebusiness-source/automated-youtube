@@ -1,8 +1,10 @@
 name: Daily videos
 
 on:
-  schedule:
-    - cron: "17 9 * * *"
+  # Paused while the batch videos are being scheduled. To switch daily videos back on,
+  # remove the # from the two lines below.
+  # schedule:
+  #   - cron: "17 9 * * *"
   workflow_dispatch:
 
 permissions:

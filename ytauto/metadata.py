@@ -39,27 +39,52 @@ def _clean(meta: VideoMetadata, max_tags: int) -> VideoMetadata:
     return VideoMetadata(title=title, description=desc, tags=tags)
 
 
-def template(theme: dict, minutes: int, channel: str) -> VideoMetadata:
+TITLE_PATTERNS = [
+    "{name} | {label} of {style} for {use}",
+    "{name} | {label} of Calm {style} for {use}",
+    "{label} of {name} {style} | Peaceful Background Music",
+    "{name} – {label} of Gentle {style} for {use}",
+    "Relaxing {style} ({label}) | {name} for {use}",
+    "{label} of {name} {style} | Relax, Focus & Unwind",
+]
+INTROS = [
+    "{label} of {lstyle}: {mood}.",
+    "Settle in with {label_l} of {lstyle}, {mood}.",
+    "A calm {label_l} of {lstyle}: {mood}.",
+    "{label} of slow, gentle {lstyle} to help you unwind: {mood}.",
+]
+
+
+def template(theme: dict, minutes: int, channel: str, variant: int = 0) -> VideoMetadata:
+    """Built-in title and description. `variant` picks different wording so batches don't repeat."""
     label = length_label(minutes).title()
     name = theme["name"]
+    use = theme.get("use", "Relaxation")
+    style = theme.get("style", "Ambient Music")
+    title = TITLE_PATTERNS[variant % len(TITLE_PATTERNS)].format(name=name, label=label, use=use, style=style)
+    volume = variant // len(TITLE_PATTERNS) + 1
+    if volume > 1:
+        title += f" · Vol. {volume}"
+    intro = INTROS[variant % len(INTROS)].format(
+        label=label, label_l=label.lower(), lname=name.lower(), lstyle=style.lower(), mood=theme["mood"])
     return VideoMetadata(
-        title=f"{name} | {label} of Ambient Music for {theme.get('use', 'Relaxation')}",
+        title=title,
         description=(
-            f"{label} of {name.lower()} music: {theme['mood']}.\n\n"
+            f"{intro}\n\n"
             f"Put it on in the background while you sleep, study, work, read or meditate. "
             f"New calm music every day on {channel}."
         ),
-        tags=[name.lower(), "ambient music", "relaxing music", "meditation music", "sleep music",
-              "study music", "calm music", f"{minutes} minute music", "background music"],
+        tags=[name.lower(), style.lower(), "relaxing music", "calm music", "sleep music", "study music",
+              f"{minutes} minute music", "background music", *theme.get("tags", [])],
     )
 
 
-def generate(theme: dict, minutes: int, cfg: dict, recent_titles: list[str]) -> VideoMetadata:
+def generate(theme: dict, minutes: int, cfg: dict, recent_titles: list[str], variant: int = 0) -> VideoMetadata:
     channel = cfg["channel"]["name"]
     meta_cfg = cfg.get("metadata", {})
     max_tags = meta_cfg.get("max_tags", 15)
     if not meta_cfg.get("use_claude", True) or not os.environ.get("ANTHROPIC_API_KEY"):
-        return _clean(template(theme, minutes, channel), max_tags)
+        return _clean(template(theme, minutes, channel, variant), max_tags)
     try:
         import anthropic
 
@@ -86,9 +111,15 @@ def generate(theme: dict, minutes: int, cfg: dict, recent_titles: list[str]) -> 
         return _clean(response.parsed_output, max_tags)
     except Exception as exc:  # metadata must never block a daily upload
         log.warning("Claude metadata failed (%s); using template", exc)
-        return _clean(template(theme, minutes, channel), max_tags)
+        return _clean(template(theme, minutes, channel, variant), max_tags)
 
 
-def full_description(meta: VideoMetadata, cfg: dict) -> str:
+def timestamp(seconds: float) -> str:
+    s = int(seconds)
+    return f"{s // 3600}:{s % 3600 // 60:02d}:{s % 60:02d}" if s >= 3600 else f"{s // 60}:{s % 60:02d}"
+
+
+def full_description(meta: VideoMetadata, cfg: dict, credit: str = "") -> str:
     footer = cfg["channel"].get("description_footer", "").strip()
-    return f"{meta.description}\n\n{footer}".strip()[:4900]
+    parts = [meta.description, credit, footer]
+    return "\n\n".join(p.strip() for p in parts if p and p.strip())[:4900]

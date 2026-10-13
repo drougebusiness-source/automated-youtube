@@ -11,9 +11,9 @@ from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import audio, ffmpeg, metadata, visuals, youtube
+from . import audio, ffmpeg, metadata, paintings, visuals, youtube
 from .config import Config
-from .music import classical, elevenlabs, library, procedural
+from .music import classical, classical_pd, elevenlabs, library, procedural
 
 log = logging.getLogger(__name__)
 
@@ -49,7 +49,8 @@ def publish_time(cfg: Config, publish_date: date, hhmm: str) -> datetime:
 
 # ----------------------------------------------------------------------------- music
 
-def make_music(cfg: Config, theme: dict, workdir: Path, seconds: float, seed: int) -> Path:
+def make_music(cfg: Config, theme: dict, workdir: Path, seconds: float, seed: int) -> tuple[Path, list[dict]]:
+    """Returns the finished mix and a tracklist [{start, composer, title}] (empty for generated music)."""
     m = cfg["music"]
     xf = float(m.get("crossfade_seconds", 8))
     track_s = float(m.get("track_minutes", 4)) * 60
@@ -58,8 +59,12 @@ def make_music(cfg: Config, theme: dict, workdir: Path, seconds: float, seed: in
     source = m.get("source", "procedural")
     tracks_dir = workdir / "tracks"
     tracks_dir.mkdir(parents=True, exist_ok=True)
+    info: list[dict] = []
 
-    if source == "elevenlabs":
+    if source == "classical_pd":
+        picked = classical_pd.make_tracks(cfg.root, seconds + 60, theme, seed)
+        tracks, info = [p for p, _ in picked], [t for _, t in picked]
+    elif source == "elevenlabs":
         tracks = elevenlabs.make_tracks(tracks_dir, need, track_s, theme, seed, m.get("elevenlabs_model", ""))
     elif source == "classical":
         tracks = classical.make_tracks(tracks_dir, cfg.root / "assets" / "midi", m.get("soundfont", ""),
@@ -71,30 +76,63 @@ def make_music(cfg: Config, theme: dict, workdir: Path, seconds: float, seed: in
     else:
         tracks = procedural.make_tracks(tracks_dir, need, track_s, theme, seed)
 
-    mix = audio.build_mix(tracks, workdir, seconds, xf, float(m.get("target_lufs", -16)))
+    mix, starts = audio.build_mix(tracks, workdir, seconds, xf, float(m.get("target_lufs", -16)),
+                                  level_tracks=(source == "classical_pd"))
     shutil.rmtree(tracks_dir, ignore_errors=True)
     for f in workdir.glob("conv_*.wav"):
         f.unlink()
-    return mix
+    tracklist = [{"start": st, "composer": t["composer"], "title": t["title"]}
+                 for st, t in zip(starts, info) if st < seconds - 20]
+    return mix, tracklist
+
+
+def music_credit(cfg: Config) -> str:
+    return classical_pd.CREDIT if cfg["music"].get("source") == "classical_pd" else ""
 
 
 # ----------------------------------------------------------------------------- one video
 
 def make_video(cfg: Config, theme: dict, minutes: float, workdir: Path, seed: int,
-               label_minutes: int | None = None) -> dict:
+               label_minutes: int | None = None, painting: dict | None = None) -> dict:
     seconds = minutes * 60
     workdir.mkdir(parents=True, exist_ok=True)
     log.info("  music (%s)...", cfg["music"].get("source", "procedural"))
-    mix = make_music(cfg, theme, workdir, seconds, seed)
-    log.info("  artwork (%s)...", cfg["visuals"].get("background_source", "procedural"))
-    bg = visuals.make_background(cfg["visuals"], theme, cfg.root, workdir / "background.jpg", seed)
-    log.info("  video...")
-    loop = visuals.make_loop_clip(bg, workdir / "loop.mp4", cfg["visuals"])
+    mix, tracklist = make_music(cfg, theme, workdir, seconds, seed)
+    if painting is not None:
+        log.info("  painting: %s, %s", painting["title"], painting["artist"])
+        src = paintings.download(painting, cfg.root / "assets" / "painting_cache")
+        bg = visuals.cover_image(src, workdir / "background.jpg", cfg["visuals"]["width"], cfg["visuals"]["height"])
+        log.info("  video (slow pan across the painting)...")
+        loop = visuals.make_pan_loop(src, workdir / "loop.mp4", cfg["visuals"])
+    else:
+        log.info("  artwork (%s)...", cfg["visuals"].get("background_source", "procedural"))
+        bg = visuals.make_background(cfg["visuals"], theme, cfg.root, workdir / "background.jpg", seed)
+        log.info("  video...")
+        loop = visuals.make_loop_clip(bg, workdir / "loop.mp4", cfg["visuals"])
     video = visuals.make_video(loop, mix, workdir / "video.mp4", seconds)
     loop.unlink(missing_ok=True)
     mix.unlink(missing_ok=True)
     thumb = visuals.make_thumbnail(bg, workdir / "thumbnail.jpg", theme["name"], label_minutes or round(minutes), cfg.root)
-    return {"video": video, "thumbnail": thumb, "background": bg}
+    return {"video": video, "thumbnail": thumb, "background": bg, "tracklist": tracklist}
+
+
+def credits_block(cfg: Config, files: dict, painting: dict | None) -> str:
+    """Tracklist with timestamps (YouTube turns these into chapters) plus artwork and music credits."""
+    parts = []
+    if files.get("tracklist"):
+        lines = [f"{metadata.timestamp(t['start'])} {t['composer']} – {t['title']}" for t in files["tracklist"]]
+        parts.append("Tracklist:\n" + "\n".join(lines))
+    if painting:
+        parts.append(paintings.credit(painting))
+    if music_credit(cfg):
+        parts.append(music_credit(cfg))
+    return "\n\n".join(parts)
+
+
+def choose_painting(cfg: Config, theme: dict, state: dict) -> dict | None:
+    if cfg["visuals"].get("background_source") != "paintings":
+        return None
+    return paintings.pick(paintings.load_catalog(cfg.root), theme["name"], state.setdefault("paintings_used", []))
 
 
 def run(cfg: Config, *, upload: bool = True, test: bool = False, run_date: date | None = None,
@@ -122,9 +160,10 @@ def run(cfg: Config, *, upload: bool = True, test: bool = False, run_date: date 
         workdir = cfg.output_dir / pd / f"{slot}-{int(entry['minutes'])}min-{theme['name'].lower().replace(' ', '-')}"
         log.info("Making %s min '%s' video for %s -> %s", minutes, theme["name"], pd, workdir)
         try:
-            files = make_video(cfg, theme, minutes, workdir, seed, int(entry["minutes"]))
-            meta = metadata.generate(theme, int(entry["minutes"]), cfg.raw, recent_titles)
-            description = metadata.full_description(meta, cfg.raw)
+            painting = choose_painting(cfg, theme, state)
+            files = make_video(cfg, theme, minutes, workdir, seed, int(entry["minutes"]), painting)
+            meta = metadata.generate(theme, int(entry["minutes"]), cfg.raw, recent_titles, variant=len(state["videos"]))
+            description = metadata.full_description(meta, cfg.raw, credits_block(cfg, files, painting))
             (workdir / "metadata.json").write_text(json.dumps(
                 {"title": meta.title, "description": description, "tags": meta.tags}, indent=2), encoding="utf-8")
             record = {"publish_date": pd, "slot": slot, "minutes": entry["minutes"], "theme": theme["name"],
@@ -149,6 +188,9 @@ def run(cfg: Config, *, upload: bool = True, test: bool = False, run_date: date 
                 log.info("  saved (not uploaded): %s", files["video"])
 
             state["theme_index"] += 1
+            if painting:
+                state.setdefault("paintings_used", []).append(painting["id"])
+                record["painting"] = painting["id"]
             if not test:
                 state["videos"].append(record)
                 save_state(cfg, state)

@@ -123,3 +123,90 @@ def test_length_label():
     assert visuals.length_label(120) == "2 HOURS"
     assert visuals.length_label(1) == "1 MINUTE"
     assert visuals.length_label(15) == "15 MINUTES"
+
+
+def test_paintings_catalog_is_public_domain_and_covers_every_theme():
+    from ytauto import paintings
+    cfg = load_config()
+    catalog = paintings.load_catalog(cfg.root)
+    for theme in cfg.themes:
+        assert len(catalog[theme["name"]]) >= 7, theme["name"]  # two weeks without repeating
+    data = json.loads((cfg.root / "assets" / "paintings.json").read_text(encoding="utf-8"))
+    assert "CC0" in data["source"]
+
+
+def test_painting_pick_rotates_then_reuses_oldest():
+    from ytauto import paintings
+    catalog = {"T": [{"id": 1}, {"id": 2}, {"id": 3}]}
+    assert paintings.pick(catalog, "T", [])["id"] == 1
+    assert paintings.pick(catalog, "T", [1, 2])["id"] == 3
+    assert paintings.pick(catalog, "T", [2, 1, 3])["id"] == 2
+
+
+def test_painting_credit_names_artist_and_licence():
+    from ytauto import paintings
+    c = paintings.credit({"id": 5, "title": "Water Lilies", "artist": "Claude Monet", "date": "1906"})
+    assert "Claude Monet" in c and "Public domain" in c and "artic.edu/artworks/5" in c
+
+
+def test_pan_loop_is_seamless(tmp_path):
+    from PIL import Image
+    img = tmp_path / "p.jpg"
+    Image.fromarray((np.random.default_rng(0).random((300, 600, 3)) * 255).astype("uint8")).save(img)
+    cfg_v = {"width": 160, "height": 90, "fps": 4, "pan_seconds": 2, "video_bitrate": "200k"}
+    out = visuals.make_pan_loop(img, tmp_path / "loop.mp4", cfg_v)
+    from ytauto import ffmpeg as ff
+    assert ff.duration(out) == pytest.approx(4, abs=0.3)
+
+
+def test_batch_detects_youtube_limits():
+    from ytauto import batch
+    assert batch._is_limit(Exception("<HttpError 400 ... uploadLimitExceeded>"))
+    assert batch._is_limit(Exception("quotaExceeded"))
+    assert not batch._is_limit(Exception("backendError"))
+
+
+def test_full_description_includes_credit():
+    meta = metadata.VideoMetadata(title="t", description="Calm music.", tags=[])
+    cfg = {"channel": {"description_footer": "Footer."}}
+    assert metadata.full_description(meta, cfg, "Artwork: X") == "Calm music.\n\nArtwork: X\n\nFooter."
+
+
+def test_music_catalog_has_an_hour_per_theme_without_repeats():
+    from ytauto.music import classical_pd
+    cfg = load_config()
+    catalog = classical_pd.load_catalog(cfg.root)
+    for theme in cfg.themes:
+        tracks = catalog[theme["name"]]
+        assert sum(t["seconds"] for t in tracks) > 65 * 60, theme["name"]
+        assert len({t["file"] for t in tracks}) == len(tracks)
+    data = json.loads((cfg.root / "assets" / "music.json").read_text(encoding="utf-8"))
+    assert all("CC0" in c["license"] or "Public Domain" in c["license"] for c in data["collections"].values())
+
+
+def test_playlist_avoids_repeats_within_a_video():
+    from ytauto.music import classical_pd
+    catalog = {"T": [{"file": str(i), "seconds": 300} for i in range(20)]}
+    picks = classical_pd.choose(catalog, "T", 3600, seed=1)
+    assert sum(t["seconds"] for t in picks) >= 3600
+    assert len({t["file"] for t in picks}) == len(picks)
+    assert classical_pd.choose(catalog, "T", 3600, seed=1) == picks  # same seed, same playlist
+
+
+def test_timestamps_and_tracklist_block():
+    from types import SimpleNamespace as NS
+    assert metadata.timestamp(0) == "0:00"
+    assert metadata.timestamp(754) == "12:34"
+    assert metadata.timestamp(3725) == "1:02:05"
+    cfg = Config(raw={"music": {"source": "classical_pd"}})
+    files = {"tracklist": [{"start": 0, "composer": "Chopin", "title": "Nocturne"},
+                           {"start": 300.5, "composer": "Bach", "title": "Aria"}]}
+    block = pipeline.credits_block(cfg, files, None)
+    assert block.startswith("Tracklist:\n0:00 Chopin – Nocturne\n5:00 Bach – Aria")
+    assert "public domain" in block
+
+
+def test_start_times_account_for_crossfades(tmp_path):
+    a = procedural.generate_track(tmp_path / "a.wav", 10, THEME["procedural"], 1)
+    b = procedural.generate_track(tmp_path / "b.wav", 10, THEME["procedural"], 2)
+    assert audio.start_times([a, b, a], 2) == pytest.approx([0, 8, 16], abs=0.01)

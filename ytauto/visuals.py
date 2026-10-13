@@ -176,3 +176,54 @@ def make_thumbnail(background: Path, out: Path, title: str, minutes: int, root: 
     out.parent.mkdir(parents=True, exist_ok=True)
     img.save(out, quality=90)
     return out
+
+
+def cover_image(src: Path, out: Path, w: int, h: int) -> Path:
+    """Centre-cropped w x h copy of an image (used for thumbnails)."""
+    out.parent.mkdir(parents=True, exist_ok=True)
+    _cover(Image.open(src), w, h).save(out, quality=95)
+    return out
+
+
+def make_pan_loop(image: Path, out: Path, cfg_visuals: dict) -> Path:
+    """A slow, smooth camera glide from one end of the painting to the other and back.
+
+    Wide paintings pan left/right; squarer or tall ones pan top/bottom so the whole width
+    stays visible. The glide eases in and out and returns to its start, so the clip loops
+    seamlessly for the whole video. Frames are drawn with sub-pixel precision (no stutter).
+    """
+    import subprocess
+
+    w, h, fps = cfg_visuals["width"], cfg_visuals["height"], cfg_visuals["fps"]
+    one_way = float(cfg_visuals.get("pan_seconds", 60))
+    frames = int(2 * one_way * fps)
+    img = Image.open(image).convert("RGB")
+    aspect = img.width / img.height
+    min_slack = 1.12  # the painting is always at least 12% bigger than the frame along the pan
+    if aspect >= 1.5:   # wide: fit height, pan horizontally
+        scale = max(h / img.height, min_slack * w / img.width)
+        horizontal = True
+    else:               # square-ish or tall: fit width, pan vertically
+        scale = max(w / img.width, min_slack * h / img.height)
+        horizontal = False
+    big = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
+    slack_x, slack_y = big.width - w, big.height - h
+
+    cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+           "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{w}x{h}", "-r", str(fps), "-i", "-",
+           "-c:v", "libx264", "-preset", "medium", "-b:v", cfg_visuals.get("video_bitrate", "2500k"),
+           "-pix_fmt", "yuv420p", "-g", str(fps * 2), "-movflags", "+faststart", str(out)]
+    proc = subprocess.Popen(cmd, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+    try:
+        for i in range(frames):
+            pos = 0.5 - 0.5 * np.cos(2 * np.pi * i / frames)  # 0 -> 1 -> 0, eased
+            ox = slack_x * pos if horizontal else slack_x / 2
+            oy = slack_y / 2 if horizontal else slack_y * pos
+            frame = big.transform((w, h), Image.AFFINE, (1, 0, ox, 0, 1, oy), resample=Image.BILINEAR)
+            proc.stdin.write(frame.tobytes())
+        proc.stdin.close()
+    except BrokenPipeError:
+        pass
+    if proc.wait() != 0:
+        raise RuntimeError(f"ffmpeg failed making pan loop: {proc.stderr.read().decode()[-1500:]}")
+    return out

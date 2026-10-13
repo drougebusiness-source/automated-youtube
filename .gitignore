@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.env
+client_secret*.json
+token.json
+output/
+logs/
+assets/painting_cache/
+assets/music_cache/

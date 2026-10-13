@@ -119,6 +119,27 @@ Use `scripts/run_daily.sh` with cron (Mac/Linux) or `scripts/run_daily.bat` with
 - `upload.contains_synthetic_media: true` tells YouTube that AI tools were involved. Keep the description footer honest.
 - Never claim medical benefits in titles. The Claude prompt already avoids "heals anxiety"-style wording.
 
+## Painting backgrounds
+
+With `visuals.background_source: "paintings"` (the default), each video shows a famous public-domain
+painting chosen to suit its theme (Monet, Whistler, Van Gogh, Caillebotte, Inness, Turner and others), with a slow,
+smooth camera glide across the canvas and back. The paintings come from the Art Institute of Chicago's
+open-access collection, which releases them under CC0 (free for commercial use). The list is in
+`assets/paintings.json`, and every description credits the painting, its artist and the museum automatically.
+
+## Making weeks of videos at once
+
+```bash
+python -m ytauto samples                 # one short preview per theme, plus an overview of all paintings
+python -m ytauto batch --days 14         # 14 days x 3 videos, uploaded as private while YouTube allows
+python -m ytauto upload-pending          # next day: upload whatever is still waiting
+```
+
+`batch` saves `output/batch/UPLOAD_LIST.csv`, a spreadsheet of every video with its suggested schedule
+date and time, title, status and YouTube link. If it's stopped or the computer restarts, run the same
+command again: it continues where it left off and never makes or uploads a video twice. Pause the daily
+GitHub workflow while you use batch videos (Actions → Daily videos → ⋯ → Disable workflow).
+
 ## Commands
 
 ```bash
