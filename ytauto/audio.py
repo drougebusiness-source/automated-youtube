@@ -15,11 +15,17 @@ SR = 44100
 def to_wav(src: Path, dst: Path, level_lufs: float | None = None) -> Path:
     """Decode to 44.1 kHz stereo WAV. With level_lufs, also trim silence at both ends and even
     out the loudness, so pieces recorded at different levels sit well next to each other."""
-    args = ["-i", str(src), "-vn", "-ac", "2", "-ar", str(SR)]
-    if level_lufs is not None:
-        trim = "silenceremove=start_periods=1:start_threshold=-55dB:start_silence=0.3"
-        args += ["-af", f"{trim},areverse,{trim},areverse,loudnorm=I={level_lufs}:TP=-2:LRA=14,aresample={SR}"]
-    ffmpeg.run([*args, "-c:a", "pcm_s16le", str(dst)])
+    if level_lufs is None:
+        ffmpeg.run(["-i", str(src), "-vn", "-ac", "2", "-ar", str(SR), "-c:a", "pcm_s16le", str(dst)])
+        return dst
+    # Two separate passes: in one filter chain, areverse followed by loudnorm can make ffmpeg hang.
+    trim = "silenceremove=start_periods=1:start_threshold=-55dB:start_silence=0.3"
+    trimmed = dst.with_name(dst.stem + "_trim.wav")
+    ffmpeg.run(["-i", str(src), "-vn", "-ac", "2", "-ar", str(SR), "-af", f"{trim},areverse,{trim},areverse",
+                "-c:a", "pcm_s16le", str(trimmed)], timeout=600)
+    ffmpeg.run(["-i", str(trimmed), "-af", f"loudnorm=I={level_lufs}:TP=-2:LRA=14,aresample={SR}",
+                "-ac", "2", "-c:a", "pcm_s16le", str(dst)], timeout=600)
+    trimmed.unlink(missing_ok=True)
     return dst
 
 

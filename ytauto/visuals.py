@@ -209,7 +209,7 @@ def make_pan_loop(image: Path, out: Path, cfg_visuals: dict) -> Path:
     big = img.resize((round(img.width * scale), round(img.height * scale)), Image.LANCZOS)
     slack_x, slack_y = big.width - w, big.height - h
 
-    cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y",
+    cmd = ["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-y",
            "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{w}x{h}", "-r", str(fps), "-i", "-",
            "-c:v", "libx264", "-preset", "medium", "-b:v", cfg_visuals.get("video_bitrate", "2500k"),
            "-pix_fmt", "yuv420p", "-g", str(fps * 2), "-movflags", "+faststart", str(out)]

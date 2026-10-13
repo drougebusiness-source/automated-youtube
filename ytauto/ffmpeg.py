@@ -16,9 +16,14 @@ def require_ffmpeg() -> None:
         )
 
 
-def run(args: list[str]) -> None:
-    cmd = ["ffmpeg", "-hide_banner", "-loglevel", "error", "-y", *args]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+def run(args: list[str], timeout: float = 1800) -> None:
+    """Runs ffmpeg. A run that takes longer than `timeout` seconds is stopped and reported as an
+    error, so one stuck file can never stall a whole batch."""
+    cmd = ["ffmpeg", "-nostdin", "-hide_banner", "-loglevel", "error", "-y", *args]
+    try:
+        result = subprocess.run(cmd, capture_output=True, text=True, stdin=subprocess.DEVNULL, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        raise RuntimeError(f"ffmpeg took longer than {timeout:.0f}s and was stopped: {' '.join(cmd)[:300]}")
     if result.returncode != 0:
         raise RuntimeError(f"ffmpeg failed: {' '.join(cmd)}\n{result.stderr[-2000:]}")
 
