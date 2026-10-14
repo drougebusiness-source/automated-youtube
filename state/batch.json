@@ -74,17 +74,6 @@
     },
     {
       "publish_date": "2026-10-16",
-      "slot": 0,
-      "publish_at": "08:00",
-      "minutes": 60,
-      "theme": "Deep Sleep",
-      "title": "Deep Sleep | 1 Hour of Classical Piano for Sleep & Deep Rest \u00b7 Vol. 3",
-      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-16/0-60min-deep-sleep",
-      "painting": 16564,
-      "painting_credit": "Artwork: \"Branch of the Seine near Giverny (Mist)\" by Claude Monet (1897). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/16564"
-    },
-    {
-      "publish_date": "2026-10-16",
       "slot": 1,
       "publish_at": "13:00",
       "minutes": 30,
@@ -240,28 +229,6 @@
       "video_id": "OFwnjP7TQY8"
     },
     {
-      "publish_date": "2026-10-20",
-      "slot": 2,
-      "publish_at": "19:00",
-      "minutes": 15,
-      "theme": "Ocean Meditation",
-      "title": "15 Minutes of Ocean Meditation Classical Music | Peaceful Background Music \u00b7 Vol. 5",
-      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-20/2-15min-ocean-meditation",
-      "painting": 16343,
-      "painting_credit": "Artwork: \"Fishing Boats in a Calm\" by Jan van de Cappelle (1651). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/16343"
-    },
-    {
-      "publish_date": "2026-10-21",
-      "slot": 0,
-      "publish_at": "08:00",
-      "minutes": 60,
-      "theme": "Morning Light",
-      "title": "Morning Light \u2013 1 Hour of Gentle Classical Music for a Calm Morning \u00b7 Vol. 5",
-      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-21/0-60min-morning-light",
-      "painting": 4783,
-      "painting_credit": "Artwork: \"Poppy Field (Giverny)\" by Claude Monet (1890\u201391). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/4783"
-    },
-    {
       "publish_date": "2026-10-21",
       "slot": 1,
       "publish_at": "13:00",
@@ -356,28 +323,6 @@
       "painting": 81545,
       "painting_credit": "Artwork: \"Stacks of Wheat (Sunset, Snow Effect)\" by Claude Monet (1890\u201391). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/81545",
       "video_id": "yAqRqjd2F6Y"
-    },
-    {
-      "publish_date": "2026-10-24",
-      "slot": 1,
-      "publish_at": "13:00",
-      "minutes": 30,
-      "theme": "Deep Sleep",
-      "title": "Deep Sleep | 30 Minutes of Classical Piano for Sleep & Deep Rest \u00b7 Vol. 7",
-      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-24/1-30min-deep-sleep",
-      "painting": 64754,
-      "painting_credit": "Artwork: \"Moonrise\" by George Inness (1891). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/64754"
-    },
-    {
-      "publish_date": "2026-10-24",
-      "slot": 2,
-      "publish_at": "19:00",
-      "minutes": 15,
-      "theme": "Rainy Study",
-      "title": "Rainy Study | 15 Minutes of Calm Classical Piano for Studying & Focus \u00b7 Vol. 7",
-      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-24/2-15min-rainy-study",
-      "painting": 27764,
-      "painting_credit": "Artwork: \"Approaching Storm\" by Eug\u00e8ne Louis Boudin (1864). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/27764"
     },
     {
       "publish_date": "2026-10-25",
@@ -476,15 +421,88 @@
       "video_id": "UcZ5lE9KH8U"
     },
     {
+      "publish_date": "2026-10-16",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 1 Hour of Classical Piano for Sleep & Deep Rest \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-16/0-60min-deep-sleep",
+      "painting": 56905,
+      "painting_credit": "Artwork: \"Nocturne: Blue and Gold\u2014Southampton Water\" by James McNeill Whistler (1872). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/56905",
+      "video_id": "u2-SLJK0T_w"
+    },
+    {
+      "publish_date": "2026-10-20",
+      "slot": 2,
+      "publish_at": "19:00",
+      "minutes": 15,
+      "theme": "Ocean Meditation",
+      "title": "Ocean Meditation | 15 Minutes of Classical Music for Meditation & Relaxation \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-20/2-15min-ocean-meditation",
+      "painting": 59927,
+      "painting_credit": "Artwork: \"Boats on the Beach at \u00c9tretat\" by Claude Monet (1885). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/59927",
+      "video_id": "d-6gDCOAxb4"
+    },
+    {
+      "publish_date": "2026-10-21",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Morning Light",
+      "title": "Morning Light | 1 Hour of Classical Music for a Calm Morning \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-21/0-60min-morning-light",
+      "painting": 94841,
+      "painting_credit": "Artwork: \"The Song of the Lark\" by Jules Breton (1884). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/94841",
+      "video_id": "rs8a_9tM_KU"
+    },
+    {
+      "publish_date": "2026-10-22",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Starlight Focus",
+      "title": "Starlight Focus | 1 Hour of Classical Piano for Deep Focus & Work \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-22/0-60min-starlight-focus",
+      "painting": 90048,
+      "painting_credit": "Artwork: \"Distant View of Niagara Falls\" by Thomas Cole (1830). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/90048",
+      "video_id": "7C49utmtBfo"
+    },
+    {
+      "publish_date": "2026-10-24",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 30 Minutes of Classical Piano for Sleep & Deep Rest \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-24/1-30min-deep-sleep",
+      "painting": 16564,
+      "painting_credit": "Artwork: \"Branch of the Seine near Giverny (Mist)\" by Claude Monet (1897). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/16564",
+      "video_id": "h6nG12vCFb8"
+    },
+    {
+      "publish_date": "2026-10-24",
+      "slot": 2,
+      "publish_at": "19:00",
+      "minutes": 15,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 15 Minutes of Classical Piano for Studying & Focus \u00b7 Vol. 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-24/2-15min-rainy-study",
+      "painting": 20684,
+      "painting_credit": "Artwork: \"Paris Street; Rainy Day\" by Gustave Caillebotte (1877). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/20684",
+      "video_id": "T8O7CRfx-Fk"
+    },
+    {
       "publish_date": "2026-10-27",
       "slot": 2,
       "publish_at": "19:00",
       "minutes": 15,
       "theme": "Forest Wind",
-      "title": "Relaxing Classical Music (15 Minutes) | Forest Wind for Reading & Unwinding \u00b7 Vol. 8",
+      "title": "Forest Wind | 15 Minutes of Classical Music for Reading & Unwinding \u00b7 Vol. 2",
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-27/2-15min-forest-wind",
-      "painting": 68388,
-      "painting_credit": "Artwork: \"Catskill Mountains\" by George Inness (1870). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/68388"
+      "painting": 76571,
+      "painting_credit": "Artwork: \"View of Cotopaxi\" by Frederic Edwin Church (1857). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/76571",
+      "video_id": "74gZwQY1k4s"
     }
   ]
 }
