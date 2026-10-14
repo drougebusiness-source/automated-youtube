@@ -26,6 +26,7 @@ def main() -> int:
     p_batch.add_argument("--stop-at-limit", action="store_true",
                          help="stop making videos once YouTube's daily upload limit is reached")
     sub.add_parser("upload-pending", help="upload batch videos that are still waiting")
+    sub.add_parser("schedule", help="give uploaded batch videos their publish date and time")
     p_sample = sub.add_parser("samples", help="make short previews of each theme to compare")
     p_sample.add_argument("--seconds", type=int, default=60)
     sub.add_parser("status", help="show recent uploads")
@@ -54,6 +55,9 @@ def main() -> int:
                        start=date.fromisoformat(args.start) if args.start else None,
                        stop_at_limit=args.stop_at_limit)
         return 0 if ok else 1
+    if args.cmd == "schedule":
+        from .batch import schedule_uploaded
+        return 0 if schedule_uploaded(cfg) else 1
     if args.cmd == "upload-pending":
         from .batch import upload_pending
         return 0 if upload_pending(cfg) else 1

@@ -184,3 +184,42 @@ def upload_pending(cfg: Config) -> bool:
     left = sum(1 for i in data["items"] if not i.get("video_id"))
     log.info("%d still waiting.%s", left, " Run this again tomorrow." if left else " All uploaded!")
     return True
+
+
+def schedule_uploaded(cfg: Config, only_missing: bool = True) -> bool:
+    """Gives every uploaded batch video its publish date and time (it stays private until then)."""
+    from googleapiclient.errors import HttpError
+
+    data = load(cfg)
+    yt = youtube.client(cfg.root)
+    now = datetime.now(timezone.utc)
+    done = failed = skipped = 0
+    for item in sorted(data["items"], key=lambda i: (i["publish_date"], i["slot"])):
+        if not item.get("video_id") or (only_missing and item.get("scheduled_for")):
+            continue
+        when = pipeline.publish_time(cfg, date.fromisoformat(item["publish_date"]), item["publish_at"])
+        if when <= now:
+            log.info("  %s %s is in the past; leaving it for you to publish", item["publish_date"], item["publish_at"])
+            skipped += 1
+            continue
+        body = {"id": item["video_id"], "status": {
+            "privacyStatus": "private",
+            "publishAt": when.strftime("%Y-%m-%dT%H:%M:%SZ"),
+            "selfDeclaredMadeForKids": bool(cfg["upload"].get("made_for_kids", False)),
+            "containsSyntheticMedia": bool(cfg["upload"].get("contains_synthetic_media", False)),
+        }}
+        try:
+            yt.videos().update(part="status", body=body).execute()
+            item["scheduled_for"] = when.isoformat()
+            done += 1
+            log.info("  scheduled %s for %s UTC: %s", item["video_id"], when.strftime("%Y-%m-%d %H:%M"), item["title"])
+        except HttpError as e:
+            failed += 1
+            log.error("  could not schedule %s: %s", item["video_id"], e)
+            if e.resp.status == 403 and failed >= 2 and done == 0:
+                log.error("YouTube is refusing to schedule videos from this app (probably until the API audit "
+                          "is approved). Stopping here.")
+                break
+    save(cfg, data)
+    log.info("Scheduled %d, failed %d, skipped %d (past)", done, failed, skipped)
+    return failed == 0
