@@ -96,6 +96,15 @@ def upload(yt, video: Path, thumbnail: Path | None, title: str, description: str
                 time.sleep(2 ** retries)
                 continue
             raise
+        except (OSError, ConnectionError, TimeoutError) as e:
+            # Dropped connections (e.g. "SSL: EOF occurred") are common on long uploads.
+            # The upload is resumable, so retrying continues from the last chunk YouTube received.
+            if retries < 8:
+                retries += 1
+                log.warning("  connection dropped (%s); retrying in %ds", type(e).__name__, 2 ** retries)
+                time.sleep(2 ** retries)
+                continue
+            raise
     video_id = response["id"]
 
     if thumbnail is not None:

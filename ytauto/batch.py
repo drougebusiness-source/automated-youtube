@@ -102,7 +102,16 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
             if free_gb < MIN_FREE_GB:
                 log.error("Stopping: only %.1f GB of disk space left. Upload or delete some videos, then run again.", free_gb)
                 return False
-            theme = cfg.themes[state["theme_index"] % len(cfg.themes)]
+            # A slot that was planned before (but never finished) keeps its theme, so each day
+            # still gets three different themes.
+            planned = next((t for t in cfg.themes if item and t["name"] == item["theme"]), None)
+            theme = planned
+            if theme is None:
+                used_today = {i["theme"] for i in data["items"] if i["publish_date"] == pd}
+                for k in range(len(cfg.themes)):
+                    theme = cfg.themes[(state["theme_index"] + k) % len(cfg.themes)]
+                    if theme["name"] not in used_today:
+                        break
             minutes = int(entry["minutes"])
             folder = cfg.output_dir / "batch" / pd / f"{slot}-{minutes}min-{theme['name'].lower().replace(' ', '-')}"
             log.info("[%d/%d] %s, %d min, %s", count, total, pd, minutes, theme["name"])
@@ -110,7 +119,8 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
                 painting = pipeline.choose_painting(cfg, theme, state)
                 seed = pipeline.seed_for(pd, slot) ^ 0x5EED
                 files = pipeline.make_video(cfg, theme, minutes, folder, seed, minutes, painting)
-                variant = len(data["items"]) + len(state["videos"])
+                # Each theme cycles through the title wordings, so repeat themes get new titles.
+                variant = sum(1 for i in data["items"] if i["theme"] == theme["name"] and (i["publish_date"], i["slot"]) != (pd, slot))
                 meta = metadata.generate(theme, minutes, cfg.raw, recent_titles, variant=variant)
                 credit = paintings.credit(painting) if painting else ""
                 description = metadata.full_description(meta, cfg.raw, pipeline.credits_block(cfg, files, painting))
@@ -124,7 +134,8 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
                 data["items"] = [i for i in data["items"] if (i["publish_date"], i["slot"]) != (pd, slot)] + [item]
                 done[(pd, slot)] = item
                 recent_titles.append(meta.title)
-                state["theme_index"] += 1
+                if not planned:
+                    state["theme_index"] += 1
                 if painting:
                     state.setdefault("paintings_used", []).append(painting["id"])
                 pipeline.save_state(cfg, state)

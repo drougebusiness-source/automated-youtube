@@ -62,7 +62,8 @@ def make_music(cfg: Config, theme: dict, workdir: Path, seconds: float, seed: in
     info: list[dict] = []
 
     if source == "classical_pd":
-        picked = classical_pd.make_tracks(cfg.root, seconds + 60, theme, seed)
+        # Extra margin: silence trimming and crossfades shorten the playlist a little.
+        picked = classical_pd.make_tracks(cfg.root, seconds * 1.08 + 240, theme, seed)
         tracks, info = [p for p, _ in picked], [t for _, t in picked]
     elif source == "elevenlabs":
         tracks = elevenlabs.make_tracks(tracks_dir, need, track_s, theme, seed, m.get("elevenlabs_model", ""))
