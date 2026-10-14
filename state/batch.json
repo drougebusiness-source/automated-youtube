@@ -462,7 +462,8 @@
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-16/0-60min-deep-sleep",
       "painting": 56905,
       "painting_credit": "Artwork: \"Nocturne: Blue and Gold\u2014Southampton Water\" by James McNeill Whistler (1872). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/56905",
-      "video_id": "u2-SLJK0T_w"
+      "video_id": "u2-SLJK0T_w",
+      "scheduled_for": "2026-10-16T12:00:00+00:00"
     },
     {
       "publish_date": "2026-10-20",
@@ -474,7 +475,8 @@
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-20/2-15min-ocean-meditation",
       "painting": 59927,
       "painting_credit": "Artwork: \"Boats on the Beach at \u00c9tretat\" by Claude Monet (1885). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/59927",
-      "video_id": "d-6gDCOAxb4"
+      "video_id": "d-6gDCOAxb4",
+      "scheduled_for": "2026-10-20T23:00:00+00:00"
     },
     {
       "publish_date": "2026-10-21",
@@ -486,7 +488,8 @@
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-21/0-60min-morning-light",
       "painting": 94841,
       "painting_credit": "Artwork: \"The Song of the Lark\" by Jules Breton (1884). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/94841",
-      "video_id": "rs8a_9tM_KU"
+      "video_id": "rs8a_9tM_KU",
+      "scheduled_for": "2026-10-21T12:00:00+00:00"
     },
     {
       "publish_date": "2026-10-22",
@@ -498,7 +501,8 @@
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-22/0-60min-starlight-focus",
       "painting": 90048,
       "painting_credit": "Artwork: \"Distant View of Niagara Falls\" by Thomas Cole (1830). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/90048",
-      "video_id": "7C49utmtBfo"
+      "video_id": "7C49utmtBfo",
+      "scheduled_for": "2026-10-22T12:00:00+00:00"
     },
     {
       "publish_date": "2026-10-24",
@@ -510,7 +514,8 @@
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-24/1-30min-deep-sleep",
       "painting": 16564,
       "painting_credit": "Artwork: \"Branch of the Seine near Giverny (Mist)\" by Claude Monet (1897). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/16564",
-      "video_id": "h6nG12vCFb8"
+      "video_id": "h6nG12vCFb8",
+      "scheduled_for": "2026-10-24T17:00:00+00:00"
     },
     {
       "publish_date": "2026-10-24",
@@ -522,7 +527,8 @@
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-24/2-15min-rainy-study",
       "painting": 20684,
       "painting_credit": "Artwork: \"Paris Street; Rainy Day\" by Gustave Caillebotte (1877). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/20684",
-      "video_id": "T8O7CRfx-Fk"
+      "video_id": "T8O7CRfx-Fk",
+      "scheduled_for": "2026-10-24T23:00:00+00:00"
     },
     {
       "publish_date": "2026-10-27",
@@ -534,7 +540,8 @@
       "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-10-27/2-15min-forest-wind",
       "painting": 76571,
       "painting_credit": "Artwork: \"View of Cotopaxi\" by Frederic Edwin Church (1857). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/76571",
-      "video_id": "74gZwQY1k4s"
+      "video_id": "74gZwQY1k4s",
+      "scheduled_for": "2026-10-27T23:00:00+00:00"
     }
   ]
 }
