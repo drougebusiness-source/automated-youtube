@@ -11,7 +11,7 @@ from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import ffmpeg, metadata, paintings, pipeline, youtube
+from . import ffmpeg, metadata, paintings, pipeline, thumbs, youtube
 from .config import Config
 
 log = logging.getLogger(__name__)
@@ -60,7 +60,9 @@ def _upload_item(cfg: Config, yt, item: dict) -> None:
     if cfg["upload"].get("mode", "private") == "scheduled":
         d = date.fromisoformat(item["publish_date"])
         when = pipeline.publish_time(cfg, d, item["publish_at"])
-    vid = youtube.upload(yt, folder / "video.mp4", folder / "thumbnail.jpg", meta["title"], meta["description"],
+    variant = item.get("thumbnail_variant")
+    thumb = folder / f"thumbnail_{variant}.jpg" if variant else folder / "thumbnail.jpg"
+    vid = youtube.upload(yt, folder / "video.mp4", thumb if thumb.exists() else folder / "thumbnail.jpg", meta["title"], meta["description"],
                          meta["tags"], cfg["upload"], when)
     item["video_id"] = vid
     log.info("  uploaded: https://youtu.be/%s", vid)
@@ -118,7 +120,12 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
             try:
                 painting = pipeline.choose_painting(cfg, theme, state)
                 seed = pipeline.seed_for(pd, slot) ^ 0x5EED
-                files = pipeline.make_video(cfg, theme, minutes, folder, seed, minutes, painting)
+                # Rotate thumbnail designs so each theme and length gets all three over time.
+                names = list(thumbs.VARIANTS)
+                # Latin square: shifts by one each day, so every slot (and so every length and
+                # publish time) gets every design, and the test isn't skewed by length.
+                variant_name = (item or {}).get("thumbnail_variant") or names[(day + slot) % len(names)]
+                files = pipeline.make_video(cfg, theme, minutes, folder, seed, minutes, painting, variant_name)
                 # Each theme cycles through the title wordings, so repeat themes get new titles.
                 variant = sum(1 for i in data["items"] if i["theme"] == theme["name"] and (i["publish_date"], i["slot"]) != (pd, slot))
                 meta = metadata.generate(theme, minutes, cfg.raw, recent_titles, variant=variant)
@@ -130,7 +137,8 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
                     f"{meta.title}\n\n{description}\n\nTags: {', '.join(meta.tags)}\n", encoding="utf-8")
                 item = {"publish_date": pd, "slot": slot, "publish_at": entry["publish_at"], "minutes": minutes,
                         "theme": theme["name"], "title": meta.title, "folder": str(folder),
-                        "painting": painting["id"] if painting else None, "painting_credit": credit}
+                        "painting": painting["id"] if painting else None, "painting_credit": credit,
+                        "thumbnail_variant": variant_name if painting else None}
                 data["items"] = [i for i in data["items"] if (i["publish_date"], i["slot"]) != (pd, slot)] + [item]
                 done[(pd, slot)] = item
                 recent_titles.append(meta.title)

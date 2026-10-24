@@ -11,7 +11,7 @@ from datetime import date, datetime, time, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
 
-from . import audio, ffmpeg, metadata, paintings, visuals, youtube
+from . import audio, ffmpeg, metadata, paintings, thumbs, visuals, youtube
 from .config import Config
 from .music import classical, classical_pd, elevenlabs, library, procedural
 
@@ -94,7 +94,8 @@ def music_credit(cfg: Config) -> str:
 # ----------------------------------------------------------------------------- one video
 
 def make_video(cfg: Config, theme: dict, minutes: float, workdir: Path, seed: int,
-               label_minutes: int | None = None, painting: dict | None = None) -> dict:
+               label_minutes: int | None = None, painting: dict | None = None,
+               thumb_variant: str | None = None) -> dict:
     seconds = minutes * 60
     workdir.mkdir(parents=True, exist_ok=True)
     log.info("  music (%s)...", cfg["music"].get("source", "procedural"))
@@ -113,7 +114,13 @@ def make_video(cfg: Config, theme: dict, minutes: float, workdir: Path, seed: in
     video = visuals.make_video(loop, mix, workdir / "video.mp4", seconds)
     loop.unlink(missing_ok=True)
     mix.unlink(missing_ok=True)
-    thumb = visuals.make_thumbnail(bg, workdir / "thumbnail.jpg", theme["name"], label_minutes or round(minutes), cfg.root)
+    if painting is not None:
+        # Three designs for A/B testing; the one assigned to this video is uploaded,
+        # the others are kept for YouTube Studio's "Test & Compare".
+        variants = thumbs.make_variants(src, workdir, theme, label_minutes or round(minutes), tracklist, cfg.root)
+        thumb = variants.get(thumb_variant or "A-gallery", variants["A-gallery"])
+    else:
+        thumb = visuals.make_thumbnail(bg, workdir / "thumbnail.jpg", theme["name"], label_minutes or round(minutes), cfg.root)
     return {"video": video, "thumbnail": thumb, "background": bg, "tracklist": tracklist}
 
 

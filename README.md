@@ -140,6 +140,30 @@ date and time, title, status and YouTube link. If it's stopped or the computer r
 command again: it continues where it left off and never makes or uploads a video twice. Pause the daily
 GitHub workflow while you use batch videos (Actions → Daily videos → ⋯ → Disable workflow).
 
+## Running for free on your own PC
+
+GitHub only gives private repositories 2,000 free Actions minutes a month. Everything also runs on your
+own computer at no cost. Double-click the files in `scripts/`:
+
+| File | What it does |
+|---|---|
+| `make_videos.bat` | makes N days of videos and uploads them as private |
+| `upload_pending.bat` | uploads anything still waiting after YouTube's daily limit |
+| `schedule_videos.bat` | sets each uploaded video's publish date and time |
+| `channel_stats.bat` | views/likes report by thumbnail design, theme, length and time |
+
+Keep the folder in sync with GitHub (GitHub Desktop → Fetch/Pull before, Push after) so the upload
+history in `state/` stays in one place.
+
+## Thumbnail A/B testing
+
+Every video gets three thumbnail designs saved next to it:
+`thumbnail_A-gallery.jpg` (whole painting, title below), `thumbnail_B-detail.jpg` (close-up, little text)
+and `thumbnail_C-framed.jpg` (painting in a gilded frame, composer beside it). The batch uploads one of them,
+rotating so every length and time slot gets every design, and `channel_stats` compares them.
+For a head-to-head test on one video, use YouTube Studio → the video → Thumbnail → **Test & compare**
+and add all three files.
+
 ## Commands
 
 ```bash
