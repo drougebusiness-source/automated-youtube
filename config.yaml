@@ -26,6 +26,7 @@ upload:
   # "private":   upload as private and stop. You publish each one by hand (review queue).
   #              Use this until Google approves your API audit (see README, step 4).
   mode: "private"
+  schedule_after_upload: true        # give each video its publish time right after it uploads
   category_id: "10"                  # 10 = Music
   made_for_kids: false
   contains_synthetic_media: true     # YouTube's "altered or synthetic content" flag

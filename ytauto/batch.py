@@ -53,6 +53,29 @@ def _is_limit(exc: Exception) -> bool:
     return any(r in text for r in LIMIT_REASONS)
 
 
+def _schedule_item(cfg: Config, yt, item: dict, now: datetime | None = None) -> bool:
+    """Sets the video's publish time (it stays private until then). A slot whose time already
+    passed today is published 30 minutes from now instead, so today's video still goes out."""
+    now = now or datetime.now(timezone.utc)
+    when = pipeline.publish_time(cfg, date.fromisoformat(item["publish_date"]), item["publish_at"])
+    if when <= now:
+        tz = ZoneInfo(cfg["channel"].get("timezone", "UTC"))
+        if when.astimezone(tz).date() != now.astimezone(tz).date():
+            log.info("  %s %s is in the past; leaving it for you to publish", item["publish_date"], item["publish_at"])
+            return False
+        when = (now + timedelta(minutes=30)).replace(second=0, microsecond=0)
+    body = {"id": item["video_id"], "status": {
+        "privacyStatus": "private",
+        "publishAt": when.strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "selfDeclaredMadeForKids": bool(cfg["upload"].get("made_for_kids", False)),
+        "containsSyntheticMedia": bool(cfg["upload"].get("contains_synthetic_media", False)),
+    }}
+    yt.videos().update(part="status", body=body).execute()
+    item["scheduled_for"] = when.isoformat()
+    log.info("  scheduled %s to go public %s UTC", item["video_id"], when.strftime("%Y-%m-%d %H:%M"))
+    return True
+
+
 def _upload_item(cfg: Config, yt, item: dict) -> None:
     folder = Path(item["folder"])
     meta = json.loads((folder / "metadata.json").read_text(encoding="utf-8"))
@@ -66,12 +89,17 @@ def _upload_item(cfg: Config, yt, item: dict) -> None:
                          meta["tags"], cfg["upload"], when)
     item["video_id"] = vid
     log.info("  uploaded: https://youtu.be/%s", vid)
+    if when is None and cfg["upload"].get("schedule_after_upload", True):
+        try:
+            _schedule_item(cfg, yt, item)
+        except Exception as exc:  # scheduling can be retried later with `schedule`
+            log.warning("  uploaded, but could not schedule yet (%s); run `schedule` later", exc)
     if not cfg["output"].get("keep_files_after_upload", False):
         (folder / "video.mp4").unlink(missing_ok=True)
 
 
 def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = None,
-              stop_at_limit: bool = False) -> bool:
+              stop_at_limit: bool = False, first_day_slots: set[int] | None = None) -> bool:
     """stop_at_limit: stop making videos once YouTube's daily limit is hit (for servers that
     don't keep files between runs). The next run continues where this one stopped."""
     ffmpeg.require_ffmpeg()
@@ -84,12 +112,15 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
     can_upload = yt is not None
     done = {(it["publish_date"], it["slot"]): it for it in data["items"]}
     recent_titles = [it["title"] for it in data["items"]] + [v.get("title", "") for v in state["videos"]]
-    total = days * len(cfg["schedule"]["videos"])
+    total = days * len(cfg["schedule"]["videos"]) - (
+        len(cfg["schedule"]["videos"]) - len(first_day_slots) if first_day_slots is not None else 0)
     count, ok = 0, True
 
     for day in range(days):
         pd = (start + timedelta(days=day)).isoformat()
         for slot, entry in enumerate(cfg["schedule"]["videos"]):
+            if day == 0 and first_day_slots is not None and slot not in first_day_slots:
+                continue  # e.g. only one video on a day that's already half over
             count += 1
             item = done.get((pd, slot))
             if item and (item.get("video_id") or Path(item["folder"], "video.mp4").exists()):
@@ -205,22 +236,11 @@ def schedule_uploaded(cfg: Config, only_missing: bool = True) -> bool:
     for item in sorted(data["items"], key=lambda i: (i["publish_date"], i["slot"])):
         if not item.get("video_id") or (only_missing and item.get("scheduled_for")):
             continue
-        when = pipeline.publish_time(cfg, date.fromisoformat(item["publish_date"]), item["publish_at"])
-        if when <= now:
-            log.info("  %s %s is in the past; leaving it for you to publish", item["publish_date"], item["publish_at"])
-            skipped += 1
-            continue
-        body = {"id": item["video_id"], "status": {
-            "privacyStatus": "private",
-            "publishAt": when.strftime("%Y-%m-%dT%H:%M:%SZ"),
-            "selfDeclaredMadeForKids": bool(cfg["upload"].get("made_for_kids", False)),
-            "containsSyntheticMedia": bool(cfg["upload"].get("contains_synthetic_media", False)),
-        }}
         try:
-            yt.videos().update(part="status", body=body).execute()
-            item["scheduled_for"] = when.isoformat()
-            done += 1
-            log.info("  scheduled %s for %s UTC: %s", item["video_id"], when.strftime("%Y-%m-%d %H:%M"), item["title"])
+            if _schedule_item(cfg, yt, item, now):
+                done += 1
+            else:
+                skipped += 1
         except HttpError as e:
             failed += 1
             log.error("  could not schedule %s: %s", item["video_id"], e)

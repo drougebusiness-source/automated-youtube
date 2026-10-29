@@ -12,6 +12,9 @@ on:
       start:
         description: "First schedule date (YYYY-MM-DD). Leave empty for tomorrow."
         default: ""
+      first_day_slots:
+        description: "Only these slots on the first day (0=8AM 1-hour, 1=1PM 30-min, 2=7PM 15-min), e.g. 0. Empty = all."
+        default: ""
   schedule:
     - cron: "41 10 * * *"   # daily: continue an unfinished batch (does nothing once it's done)
 
@@ -36,10 +39,12 @@ jobs:
             echo "run=yes" >> "$GITHUB_OUTPUT"
             echo "days=${{ inputs.days }}" >> "$GITHUB_OUTPUT"
             echo "start=${{ inputs.start }}" >> "$GITHUB_OUTPUT"
+            echo "first=${{ inputs.first_day_slots }}" >> "$GITHUB_OUTPUT"
           elif [ -f state/batch_request.json ]; then
             echo "run=yes" >> "$GITHUB_OUTPUT"
             echo "days=$(python3 -c "import json;print(json.load(open('state/batch_request.json'))['days'])")" >> "$GITHUB_OUTPUT"
             echo "start=$(python3 -c "import json;print(json.load(open('state/batch_request.json'))['start'])")" >> "$GITHUB_OUTPUT"
+            echo "first=$(python3 -c "import json;print(json.load(open('state/batch_request.json')).get('first_day_slots',''))")" >> "$GITHUB_OUTPUT"
           else
             echo "run=no" >> "$GITHUB_OUTPUT"
           fi
@@ -74,17 +79,25 @@ jobs:
           START="${{ steps.plan.outputs.start }}"
           if [ -z "$START" ]; then START=$(TZ="$(python3 -c "import yaml;print(yaml.safe_load(open('config.yaml'))['channel']['timezone'])")" date -d tomorrow +%F); fi
           DAYS="${{ steps.plan.outputs.days }}"
-          echo "{\"days\": $DAYS, \"start\": \"$START\"}" > state/batch_request.json
-          python -m ytauto batch --days "$DAYS" --start "$START" --stop-at-limit
-          # Finished when every video is uploaded: stop the daily continuation.
-          python3 -c "
-          import json, sys
-          d = json.load(open('state/batch.json'))
-          done = sum(1 for i in d['items'] if i.get('video_id'))
-          need = $DAYS * len(__import__('yaml').safe_load(open('config.yaml'))['schedule']['videos'])
-          print(f'{done}/{need} uploaded')
-          sys.exit(0 if done >= need else 3)
-          " && rm -f state/batch_request.json || true
+          FIRST="${{ steps.plan.outputs.first }}"
+          echo "{\"days\": $DAYS, \"start\": \"$START\", \"first_day_slots\": \"$FIRST\"}" > state/batch_request.json
+          ARGS="--days $DAYS --start $START --stop-at-limit"
+          if [ -n "$FIRST" ]; then ARGS="$ARGS --first-day-slots $FIRST"; fi
+          python -m ytauto batch $ARGS || echo "Some videos failed; they will be retried next run."
+          # Finished when every planned video is uploaded: stop the daily continuation.
+          python3 - "$DAYS" "$START" "$FIRST" <<'PY' && rm -f state/batch_request.json || true
+          import json, sys, yaml
+          from datetime import date, timedelta
+          days, start, first = int(sys.argv[1]), date.fromisoformat(sys.argv[2]), sys.argv[3]
+          slots = len(yaml.safe_load(open("config.yaml"))["schedule"]["videos"])
+          firsts = {int(x) for x in first.split(",")} if first else set(range(slots))
+          planned = {(start.isoformat(), s) for s in firsts} | {
+              ((start + timedelta(days=d)).isoformat(), s) for d in range(1, days) for s in range(slots)}
+          items = json.load(open("state/batch.json"))["items"]
+          done = {(i["publish_date"], i["slot"]) for i in items if i.get("video_id")}
+          print(f"{len(planned & done)}/{len(planned)} uploaded")
+          sys.exit(0 if planned <= done else 3)
+          PY
 
       - name: Save progress
         if: always() && steps.plan.outputs.run == 'yes'
