@@ -28,6 +28,11 @@ def main() -> int:
                          help="stop making videos once YouTube's daily upload limit is reached")
     sub.add_parser("upload-pending", help="upload batch videos that are still waiting")
     sub.add_parser("schedule", help="give uploaded batch videos their publish date and time")
+    p_sh = sub.add_parser("shorts", help="make 4 Shorts a day linked to that day's long videos")
+    p_sh.add_argument("--start", required=True, help="first date YYYY-MM-DD")
+    p_sh.add_argument("--days", type=int, default=7)
+    p_sh.add_argument("--no-upload", action="store_true")
+    p_sh.add_argument("--stop-at-limit", action="store_true")
     sub.add_parser("stats", help="views, likes and comments per video, grouped by theme and length")
     p_sample = sub.add_parser("samples", help="make short previews of each theme to compare")
     p_sample.add_argument("--seconds", type=int, default=60)
@@ -58,6 +63,10 @@ def main() -> int:
                        stop_at_limit=args.stop_at_limit,
                        first_day_slots={int(x) for x in args.first_day_slots.split(",")} if args.first_day_slots else None)
         return 0 if ok else 1
+    if args.cmd == "shorts":
+        from .shorts_batch import run_shorts
+        return 0 if run_shorts(cfg, date.fromisoformat(args.start), args.days, upload=not args.no_upload,
+                               stop_at_limit=args.stop_at_limit) else 1
     if args.cmd == "stats":
         from .stats import report
         return 0 if report(cfg) else 1

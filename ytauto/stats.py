@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 def _known_videos(cfg: Config) -> dict[str, dict]:
     """Every video the bot uploaded, with what we know about it (theme, length, painting...)."""
     known: dict[str, dict] = {}
-    for name in ("history.json", "batch.json"):
+    for name in ("history.json", "batch.json", "shorts.json"):
         path = cfg.state_dir / name
         if not path.exists():
             continue
@@ -54,7 +54,8 @@ def report(cfg: Config) -> bool:
                 "publish_at": v["status"].get("publishAt", ""), "published": published,
                 "theme": meta.get("theme", ""), "minutes": meta.get("minutes", ""),
                 "slot_time": meta.get("publish_at", ""), "painting": meta.get("painting", ""),
-                "thumbnail": meta.get("thumbnail_variant") or "A-gallery (original)",
+                "thumbnail": meta.get("thumbnail_variant") or ("(short)" if meta.get("kind") else "A-gallery (original)"),
+                "type": f"short: {meta['kind']}" if meta.get("kind") else "long video",
                 "views": int(s.get("viewCount", 0)), "likes": int(s.get("likeCount", 0)),
                 "comments": int(s.get("commentCount", 0)),
                 "views_per_day": round(int(s.get("viewCount", 0)) / age_days, 1) if age_days else "",
@@ -75,7 +76,7 @@ def report(cfg: Config) -> bool:
         log.info("%6d views %4d likes %3d comments  %5s/day  %-16s %3s min %s  %s",
                  r["views"], r["likes"], r["comments"], r["views_per_day"], r["theme"], r["minutes"],
                  r["slot_time"], r["title"][:70])
-    for key in ("thumbnail", "theme", "minutes", "slot_time"):
+    for key in ("type", "thumbnail", "theme", "minutes", "slot_time"):
         groups: dict[str, list[dict]] = defaultdict(list)
         for r in public:
             groups[str(r[key])].append(r)

@@ -3,7 +3,8 @@
 # ---------------------------------------------------------------------------
 
 channel:
-  name: "Rest and Relaxation"                 # used in descriptions and thumbnails
+  name: "Rest and Relaxation"
+  handle: ""                         # your @handle, e.g. "@RestAndRelaxation" (shown on every Short)                 # used in descriptions and thumbnails
   timezone: "America/New_York"       # times below are in this time zone
   # Credit line added to every description. Keep it honest about how the music is made.
   description_footer: |
