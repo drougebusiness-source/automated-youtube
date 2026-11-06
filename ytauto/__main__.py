@@ -33,6 +33,7 @@ def main() -> int:
     p_sh.add_argument("--days", type=int, default=7)
     p_sh.add_argument("--no-upload", action="store_true")
     p_sh.add_argument("--stop-at-limit", action="store_true")
+    sub.add_parser("comments", help="post a link to the full video under each Short once it is public")
     sub.add_parser("stats", help="views, likes and comments per video, grouped by theme and length")
     p_sample = sub.add_parser("samples", help="make short previews of each theme to compare")
     p_sample.add_argument("--seconds", type=int, default=60)
@@ -67,6 +68,9 @@ def main() -> int:
         from .shorts_batch import run_shorts
         return 0 if run_shorts(cfg, date.fromisoformat(args.start), args.days, upload=not args.no_upload,
                                stop_at_limit=args.stop_at_limit) else 1
+    if args.cmd == "comments":
+        from .shorts_batch import post_link_comments
+        return 0 if post_link_comments(cfg) else 1
     if args.cmd == "stats":
         from .stats import report
         return 0 if report(cfg) else 1

@@ -187,7 +187,7 @@ def run_shorts(cfg: Config, start: date, days: int, upload: bool = True, stop_at
     tz = ZoneInfo(cfg["channel"].get("timezone", "UTC"))
     now = datetime.now(timezone.utc)
     yt = youtube.client(cfg.root) if upload else None
-    can_upload, ok, comment_ok = upload, True, True
+    can_upload, ok = upload, True
     for d in range(days):
         day = start + timedelta(days=d)
         pd = day.isoformat()
@@ -239,13 +239,6 @@ def run_shorts(cfg: Config, start: date, days: int, upload: bool = True, stop_at
                 item["scheduled_for"] = when.isoformat()
                 log.info("  scheduled for %s UTC", when.strftime("%Y-%m-%d %H:%M"))
                 video.unlink(missing_ok=True)
-                if comment_ok:
-                    try:
-                        yt.commentThreads().insert(part="snippet", body={"snippet": {"videoId": vid, "topLevelComment": {
-                            "snippet": {"textOriginal": f"Full {link['theme']} version: https://youtu.be/{link['video_id']}"}}}}).execute()
-                    except Exception as exc:
-                        comment_ok = False
-                        log.warning("  can't post comments with this sign-in (%s); the link is in the description", exc)
             except Exception as exc:
                 if _is_limit(exc):
                     can_upload = False
@@ -257,4 +250,48 @@ def run_shorts(cfg: Config, start: date, days: int, upload: bool = True, stop_at
     save(cfg, data)
     n = sum(1 for i in data["items"] if i.get("video_id"))
     log.info("Shorts: %d uploaded and scheduled in total", n)
+    return ok
+
+
+def post_link_comments(cfg: Config) -> bool:
+    """Posts "Full version: <link>" under every Short that has gone public and has no comment yet.
+    Kept in state/comments.json so it never clashes with a running Shorts batch."""
+    if not youtube.can_comment(cfg.root):
+        log.warning("This sign-in can't post comments. Run scripts\\reauth.bat (or `python -m ytauto auth`) "
+                    "and paste the new token.json into the YOUTUBE_TOKEN_JSON secret.")
+        return False
+    path = cfg.state_dir / "comments.json"
+    posted = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
+    longs = {i["video_id"]: i for i in json.loads((cfg.state_dir / "batch.json").read_text(encoding="utf-8"))["items"]
+             if i.get("video_id")}
+    now = datetime.now(timezone.utc)
+    yt = youtube.client(cfg.root)
+    ok, n = True, 0
+    for item in load(cfg)["items"]:
+        vid, target = item.get("video_id"), item.get("links_to")
+        if not vid or not target or vid in posted or not item.get("scheduled_for"):
+            continue
+        if datetime.fromisoformat(item["scheduled_for"]) > now:
+            continue  # still private; comment once it's live
+        long = longs.get(target, {})
+        length = long.get("minutes")
+        label = (f"{length // 60}-hour" if length and length % 60 == 0 else f"{length}-minute") if length else "full"
+        text = (f"Full {label} {item.get('theme', '')} version: https://youtu.be/{target}").replace("  ", " ")
+        try:
+            r = yt.commentThreads().insert(part="snippet", body={"snippet": {"videoId": vid, "topLevelComment": {
+                "snippet": {"textOriginal": text}}}}).execute()
+            posted[vid] = {"comment_id": r.get("id"), "links_to": target, "at": now.isoformat(timespec="seconds")}
+            n += 1
+            log.info("  comment on %s -> %s", vid, target)
+        except Exception as exc:
+            msg = str(exc)
+            if "commentsDisabled" in msg or "disabled comments" in msg:
+                posted[vid] = {"skipped": "comments disabled"}
+            else:
+                ok = False
+                log.warning("  couldn't comment on %s: %s", vid, msg[:200])
+                if "insufficient" in msg.lower() or "quota" in msg.lower():
+                    break
+        path.write_text(json.dumps(posted, indent=1), encoding="utf-8")
+    log.info("Link comments: %d posted now, %d in total", n, sum(1 for v in posted.values() if v.get("comment_id")))
     return ok

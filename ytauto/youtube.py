@@ -14,7 +14,9 @@ log = logging.getLogger(__name__)
 SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/youtube",  # thumbnails and playlists
+    "https://www.googleapis.com/auth/youtube.force-ssl",  # posting link comments
 ]
+COMMENT_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl"
 
 
 def authorize(root: Path) -> Path:
@@ -47,10 +49,21 @@ def _credentials(root: Path):
         info = json.loads(token_file.read_text(encoding="utf-8"))
     else:
         raise RuntimeError("Not signed in to YouTube. Run `python -m ytauto auth` first (README step 3).")
-    creds = Credentials.from_authorized_user_info(info, SCOPES)
+    # Use the permissions this sign-in actually granted, so an older token keeps working.
+    creds = Credentials.from_authorized_user_info(info, info.get("scopes") or SCOPES)
     if not creds.valid:
         creds.refresh(Request())
     return creds
+
+
+def can_comment(root: Path) -> bool:
+    raw = os.environ.get("YOUTUBE_TOKEN_JSON")
+    token_file = root / "token.json"
+    info = json.loads(raw) if raw else json.loads(token_file.read_text(encoding="utf-8")) if token_file.exists() else {}
+    scopes = info.get("scopes") or []
+    if isinstance(scopes, str):
+        scopes = scopes.split()
+    return COMMENT_SCOPE in scopes
 
 
 def client(root: Path):
