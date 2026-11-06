@@ -15,7 +15,9 @@ SCOPES = [
     "https://www.googleapis.com/auth/youtube.upload",
     "https://www.googleapis.com/auth/youtube",  # thumbnails and playlists
     "https://www.googleapis.com/auth/youtube.force-ssl",  # posting link comments
+    "https://www.googleapis.com/auth/yt-analytics.readonly",  # watch hours for the stats report
 ]
+ANALYTICS_SCOPE = "https://www.googleapis.com/auth/yt-analytics.readonly"
 COMMENT_SCOPE = "https://www.googleapis.com/auth/youtube.force-ssl"
 
 
@@ -57,13 +59,23 @@ def _credentials(root: Path):
 
 
 def can_comment(root: Path) -> bool:
+    return COMMENT_SCOPE in granted_scopes(root)
+
+
+def granted_scopes(root: Path) -> list[str]:
     raw = os.environ.get("YOUTUBE_TOKEN_JSON")
     token_file = root / "token.json"
     info = json.loads(raw) if raw else json.loads(token_file.read_text(encoding="utf-8")) if token_file.exists() else {}
     scopes = info.get("scopes") or []
     if isinstance(scopes, str):
         scopes = scopes.split()
-    return COMMENT_SCOPE in scopes
+    return scopes
+
+
+def analytics(root: Path):
+    from googleapiclient.discovery import build
+
+    return build("youtubeAnalytics", "v2", credentials=_credentials(root), cache_discovery=False)
 
 
 def client(root: Path):

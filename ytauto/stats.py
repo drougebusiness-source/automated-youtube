@@ -29,12 +29,44 @@ def _known_videos(cfg: Config) -> dict[str, dict]:
     return known
 
 
+def _watch_hours(cfg: Config) -> None:
+    """Last-365-day watch hours and subscribers gained, the numbers the Partner Program looks at."""
+    if youtube.ANALYTICS_SCOPE not in youtube.granted_scopes(cfg.root):
+        log.info("(watch hours: sign in again with scripts\\reauth.bat to include them)")
+        return
+    from datetime import date, timedelta
+    end = date.today()
+    start = end - timedelta(days=365)
+    try:
+        ya = youtube.analytics(cfg.root)
+        q = dict(ids="channel==MINE", startDate=start.isoformat(), endDate=end.isoformat(),
+                 metrics="views,estimatedMinutesWatched,subscribersGained,subscribersLost")
+        r = ya.reports().query(**q).execute().get("rows") or [[0, 0, 0, 0]]
+        v, mins, gained, lost = r[0]
+        log.info("Last 365 days: %d views, %.0f watch hours, %+d subscribers", v, mins / 60, gained - lost)
+        try:
+            rows = ya.reports().query(**q, dimensions="creatorContentType").execute().get("rows") or []
+            for kind, v, mins, gained, lost in rows:
+                log.info("  %-12s %6d views  %7.0f watch hours  %+d subs", kind, v, mins / 60, gained - lost)
+        except Exception:
+            pass
+        r = ya.reports().query(ids="channel==MINE", startDate=(end - timedelta(days=7)).isoformat(),
+                               endDate=end.isoformat(), metrics="views,estimatedMinutesWatched,averageViewDuration,subscribersGained").execute()
+        if r.get("rows"):
+            v, mins, avd, gained = r["rows"][0]
+            log.info("Last 7 days: %d views, %.0f watch hours (%.1f h/day), avg view %.1f min, +%d subs",
+                     v, mins / 60, mins / 60 / 7, avd / 60, gained)
+    except Exception as exc:
+        log.warning("Couldn't read watch hours (is the YouTube Analytics API enabled in Google Cloud?): %s", str(exc)[:200])
+
+
 def report(cfg: Config) -> bool:
     yt = youtube.client(cfg.root)
     ch = yt.channels().list(part="statistics,snippet", mine=True).execute()["items"][0]
     st = ch["statistics"]
     log.info("Channel %s: %s subscribers, %s total views, %s videos", ch["snippet"]["title"],
              st.get("subscriberCount", "hidden"), st.get("viewCount"), st.get("videoCount"))
+    _watch_hours(cfg)
 
     known = _known_videos(cfg)
     ids = list(known)
