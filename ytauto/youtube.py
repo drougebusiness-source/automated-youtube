@@ -46,7 +46,8 @@ def _credentials(root: Path):
     raw = os.environ.get("YOUTUBE_TOKEN_JSON")
     token_file = root / "token.json"
     if raw:
-        info = json.loads(raw)
+        from .reauth import decrypt
+        info = decrypt(root, raw) or json.loads(raw)
     elif token_file.exists():
         info = json.loads(token_file.read_text(encoding="utf-8"))
     else:
@@ -65,6 +66,11 @@ def can_comment(root: Path) -> bool:
 def granted_scopes(root: Path) -> list[str]:
     raw = os.environ.get("YOUTUBE_TOKEN_JSON")
     token_file = root / "token.json"
+    if raw:
+        from .reauth import decrypt
+        enc = decrypt(root, raw)
+        if enc:
+            return enc.get("scopes") or []
     info = json.loads(raw) if raw else json.loads(token_file.read_text(encoding="utf-8")) if token_file.exists() else {}
     scopes = info.get("scopes") or []
     if isinstance(scopes, str):

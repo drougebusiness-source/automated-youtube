@@ -1,0 +1,39 @@
+name: Sign in again
+
+# Run once with "answer" empty: the log shows a Google sign-in link. Allow access, then run again
+# with the address your browser landed on pasted into "answer". Stored encrypted in state/token.enc.
+on:
+  workflow_dispatch:
+    inputs:
+      answer:
+        description: "Leave empty to get the link; then paste the localhost address here"
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  reauth:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - run: pip install -r requirements.txt
+      - name: Sign in
+        env:
+          YOUTUBE_TOKEN_JSON: ${{ secrets.YOUTUBE_TOKEN_JSON }}
+        # the answer is read from the event file, so it never appears in the log
+        run: python -m ytauto reauth --answer-from-event
+      - name: Save
+        if: inputs.answer != ''
+        run: |
+          git config user.name "daily-videos-bot"
+          git config user.email "daily-videos-bot@users.noreply.github.com"
+          git add state/token.enc
+          git commit -m "Updated sign-in" || exit 0
+          for i in 1 2 3; do git pull --rebase --autostash && git push && break; sleep 5; done
