@@ -110,6 +110,7 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
         start = datetime.now(tz).date() + timedelta(days=1)
     yt = youtube.client(cfg.root) if upload and cfg["upload"].get("enabled", True) else None
     can_upload = yt is not None
+    channel = youtube.channel_id(yt, cfg.root)
     done = {(it["publish_date"], it["slot"]): it for it in data["items"]}
     recent_titles = [it["title"] for it in data["items"]] + [v.get("title", "") for v in state["videos"]]
     total = days * len(cfg["schedule"]["videos"]) - (
@@ -140,11 +141,7 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
             planned = next((t for t in cfg.themes if item and t["name"] == item["theme"]), None)
             theme = planned
             if theme is None:
-                used_today = {i["theme"] for i in data["items"] if i["publish_date"] == pd}
-                for k in range(len(cfg.themes)):
-                    theme = cfg.themes[(state["theme_index"] + k) % len(cfg.themes)]
-                    if theme["name"] not in used_today:
-                        break
+                theme = _theme_for(cfg, entry, pd, state, {i["theme"] for i in data["items"] if i["publish_date"] == pd})
             minutes = int(entry["minutes"])
             folder = cfg.output_dir / "batch" / pd / f"{slot}-{minutes}min-{theme['name'].lower().replace(' ', '-')}"
             log.info("[%d/%d] %s, %d min, %s", count, total, pd, minutes, theme["name"])
@@ -152,16 +149,17 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
                 painting = pipeline.choose_painting(cfg, theme, state)
                 seed = pipeline.seed_for(pd, slot) ^ 0x5EED
                 # Rotate thumbnail designs so each theme and length gets all three over time.
-                names = list(thumbs.VARIANTS)
-                # Latin square: shifts by one each day, so every slot (and so every length and
-                # publish time) gets every design, and the test isn't skewed by length.
-                variant_name = (item or {}).get("thumbnail_variant") or names[(day + slot) % len(names)]
+                # Nov 10: design A (whole painting) won the test (about 3x the views of B and C).
+                # It is now the default; every 5th video still gets B to keep checking.
+                variant_name = (item or {}).get("thumbnail_variant") or (
+                    "B-detail" if (date.fromisoformat(pd).toordinal() + slot) % 5 == 0 else "A-gallery")
                 files = pipeline.make_video(cfg, theme, minutes, folder, seed, minutes, painting, variant_name)
                 # Each theme cycles through the title wordings, so repeat themes get new titles.
                 variant = sum(1 for i in data["items"] if i["theme"] == theme["name"] and (i["publish_date"], i["slot"]) != (pd, slot))
                 meta = metadata.generate(theme, minutes, cfg.raw, recent_titles, variant=variant)
+                meta.title = metadata.standard_title(theme, minutes, metadata.main_composer(files["tracklist"], minutes * 60))
                 credit = paintings.credit(painting) if painting else ""
-                description = metadata.full_description(meta, cfg.raw, pipeline.credits_block(cfg, files, painting))
+                description = metadata.full_description(meta, cfg.raw, pipeline.credits_block(cfg, files, painting), channel)
                 (folder / "metadata.json").write_text(json.dumps(
                     {"title": meta.title, "description": description, "tags": meta.tags}, indent=2), encoding="utf-8")
                 (folder / "title_and_description.txt").write_text(
@@ -192,6 +190,23 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
     if waiting and upload:
         log.info("Upload the rest on another day with:  python -m ytauto upload-pending")
     return ok
+
+
+def _theme_for(cfg: Config, entry: dict, pd: str, state: dict, used_today: set[str]) -> dict:
+    """The slot's own rotation (one step per day) if it has one, else the next active theme."""
+    by_name = {t["name"]: t for t in cfg.themes}
+    names = entry.get("themes") or []
+    day = date.fromisoformat(pd).toordinal()
+    for k in range(len(names)):
+        t = by_name.get(names[(day + k) % len(names)])
+        if t and t["name"] not in used_today:
+            return t
+    active = [t for t in cfg.themes if t.get("active", True)] or cfg.themes
+    for k in range(len(active)):
+        t = active[(state["theme_index"] + k) % len(active)]
+        if t["name"] not in used_today:
+            return t
+    return active[0]
 
 
 def _try_upload(cfg: Config, yt, item: dict, data: dict) -> bool:

@@ -119,7 +119,37 @@ def timestamp(seconds: float) -> str:
     return f"{s // 3600}:{s % 3600 // 60:02d}:{s % 60:02d}" if s >= 3600 else f"{s // 60}:{s % 60:02d}"
 
 
-def full_description(meta: VideoMetadata, cfg: dict, credit: str = "") -> str:
+def main_composer(tracklist: list[dict], seconds: float) -> str:
+    """The composer heard for at least half the video, by surname, or ""."""
+    share: dict[str, float] = {}
+    for i, t in enumerate(tracklist):
+        end = tracklist[i + 1]["start"] if i + 1 < len(tracklist) else seconds
+        share[t["composer"]] = share.get(t["composer"], 0) + max(end - t["start"], 0)
+    if not share:
+        return ""
+    name, secs = max(share.items(), key=lambda kv: kv[1])
+    return name.split()[-1] if secs >= seconds * 0.5 else ""
+
+
+def standard_title(theme: dict, minutes: int, composer: str = "") -> str:
+    """'[Theme] | [Length] of Calm Classical Piano for [Use]' (+ ' · Chopin' when one composer dominates)."""
+    label = length_label(minutes).title()
+    title = f"{theme['name']} | {label} of Calm {theme.get('style', 'Classical Music')} for {theme.get('use', 'Relaxation')}"
+    if composer and len(title) + len(composer) + 3 <= 100:
+        title += f" · {composer}"
+    return title
+
+
+def subscribe_line(cfg: dict, channel_id: str = "") -> str:
+    line = cfg["channel"].get("subscribe_line", "")
+    if not line:
+        return ""
+    if channel_id:
+        return line.replace("{subscribe}", f"https://www.youtube.com/channel/{channel_id}?sub_confirmation=1")
+    return line.split("Subscribe")[0].strip() + " Subscribe so you don't miss one." if "{subscribe}" in line else line
+
+
+def full_description(meta: VideoMetadata, cfg: dict, credit: str = "", channel_id: str = "") -> str:
     footer = cfg["channel"].get("description_footer", "").strip()
-    parts = [meta.description, credit, footer]
+    parts = [subscribe_line(cfg, channel_id), meta.description, credit, footer]
     return "\n\n".join(p.strip() for p in parts if p and p.strip())[:4900]

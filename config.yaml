@@ -6,6 +6,9 @@ channel:
   name: "Rest and Relaxation"
   handle: ""                         # your @handle, e.g. "@RestAndRelaxation" (shown on every Short)                 # used in descriptions and thumbnails
   timezone: "America/New_York"       # times below are in this time zone
+  # First line of every description (long videos and Shorts). {subscribe} becomes the channel's
+  # subscribe link.
+  subscribe_line: "New calm classical music every day. Subscribe: {subscribe}"
   # Credit line added to every description. Keep it honest about how the music is made.
   description_footer: |
     Rest and Relaxation: timeless classical music and art, for sleep, study and calm.
@@ -14,9 +17,11 @@ schedule:
   # One video per entry, each with its own theme, music and artwork, so the
   # uploads are never three cuts of the same thing.
   videos:
-    - { minutes: 60, publish_at: "08:00" }
-    - { minutes: 30, publish_at: "13:00" }
-    - { minutes: 15, publish_at: "19:00" }
+  # "themes" rotates one per day (Nov 10 mix: ~1/3 Rainy Study, 1/3 Deep Sleep, rest Morning
+  # Light + Forest Wind, chosen from what performed best). No theme repeats within a day.
+    - { minutes: 60, publish_at: "08:00", themes: ["Rainy Study", "Morning Light", "Rainy Study", "Forest Wind"] }
+    - { minutes: 30, publish_at: "13:00", themes: ["Forest Wind", "Rainy Study", "Morning Light", "Rainy Study"] }
+    - { minutes: 180, publish_at: "20:00", themes: ["Deep Sleep"] }
   # Videos made today are published this many days later. 1 day gives you time
   # to watch the review queue before anything goes public.
   publish_days_ahead: 1
@@ -37,6 +42,7 @@ upload:
     60: ""
     30: ""
     15: ""
+    180: ""
 
 music:
   # Where the music comes from:
@@ -97,7 +103,8 @@ themes:
     use: "Sleep & Deep Rest"
     style: "Classical Piano"
     mood: "Chopin's gentlest nocturnes and preludes for drifting off to sleep"
-    tags: ["chopin nocturnes", "classical piano for sleep", "sleep music piano"]
+    tags: ["chopin nocturnes", "classical piano for sleep", "sleep music piano", "3 hour sleep music"]
+    music_also: ["Starlight Focus"]    # calm Bach/Schubert piano to fill the 3-hour videos
     music_prompt: "Ambient sleep music, warm evolving synth pads, very slow, no drums, no vocals, soft and dark, 50 BPM"
     image_prompt: "A quiet bedroom window at night with moonlight and soft blue haze, painterly, no people, no text"
     colors: ["#0b1d3a", "#3b5b92"]
@@ -114,6 +121,7 @@ themes:
     procedural: { key: "F", scale: "major", texture: "rain", bells: true, tempo: "slow" }
 
   - name: "Ocean Meditation"
+    active: false                    # paused Nov 10 (lowest views per video)
     use: "Meditation & Relaxation"
     style: "Classical Music"
     mood: "slow, flowing orchestral and piano music, like waves on a calm shore"
@@ -144,6 +152,7 @@ themes:
     procedural: { key: "E", scale: "dorian", texture: "wind", bells: false, tempo: "slow" }
 
   - name: "Starlight Focus"
+    active: false                    # paused Nov 10 (lowest views per video)
     use: "Deep Focus & Work"
     style: "Classical Piano"
     mood: "Bach's Goldberg Variations and Schubert sonatas for calm, steady focus"

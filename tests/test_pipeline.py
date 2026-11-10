@@ -210,3 +210,52 @@ def test_start_times_account_for_crossfades(tmp_path):
     a = procedural.generate_track(tmp_path / "a.wav", 10, THEME["procedural"], 1)
     b = procedural.generate_track(tmp_path / "b.wav", 10, THEME["procedural"], 2)
     assert audio.start_times([a, b, a], 2) == pytest.approx([0, 8, 16], abs=0.01)
+
+
+def test_nov10_schedule_mix_and_no_repeats():
+    from collections import Counter
+    from datetime import date, timedelta
+    from ytauto.batch import _theme_for
+    cfg = load_config()
+    mins = [e["minutes"] for e in cfg["schedule"]["videos"]]
+    assert mins == [60, 30, 180]
+    counts = Counter()
+    for d in range(28):
+        pd = (date(2026, 11, 13) + timedelta(days=d)).isoformat()
+        used = set()
+        for e in cfg["schedule"]["videos"]:
+            t = _theme_for(cfg, e, pd, {"theme_index": 0}, used)
+            assert t["name"] not in used
+            used.add(t["name"])
+            counts[t["name"]] += 1
+    assert counts["Deep Sleep"] == 28 and counts["Rainy Study"] == 28
+    assert "Starlight Focus" not in counts and "Ocean Meditation" not in counts
+
+
+def test_standard_title_and_main_composer():
+    from ytauto import metadata
+    cfg = load_config()
+    th = next(t for t in cfg.themes if t["name"] == "Deep Sleep")
+    tl = [{"start": 0, "composer": "Frédéric Chopin"}, {"start": 7000, "composer": "J.S. Bach"}]
+    assert metadata.main_composer(tl, 10800) == "Chopin"
+    assert metadata.standard_title(th, 180, "Chopin") == "Deep Sleep | 3 Hours of Calm Classical Piano for Sleep & Deep Rest · Chopin"
+    assert "sub_confirmation=1" in metadata.subscribe_line(cfg.raw, "UC123")
+    assert "{subscribe}" not in metadata.subscribe_line(cfg.raw, "")
+
+
+def test_three_hour_deep_sleep_has_enough_music(monkeypatch):
+    from ytauto.music import classical_pd
+    cfg = load_config()
+    th = next(t for t in cfg.themes if t["name"] == "Deep Sleep")
+    monkeypatch.setattr(classical_pd, "download", lambda t, cache: t["file"])
+    picked = classical_pd.make_tracks(cfg.root, 180 * 60 * 1.08 + 240, th, 1)
+    files = [t["file"] for _, t in picked]
+    assert sum(t["seconds"] for _, t in picked) >= 180 * 60 and len(files) == len(set(files))
+
+
+def test_shorts_link_to_new_slots():
+    from ytauto.shorts_batch import _link_for
+    longs = [{"slot": 0, "minutes": 60, "theme": "Morning Light", "video_id": "a"},
+             {"slot": 1, "minutes": 30, "theme": "Rainy Study", "video_id": "b"},
+             {"slot": 2, "minutes": 180, "theme": "Deep Sleep", "video_id": "c"}]
+    assert [_link_for(k, longs)["video_id"] for k in ("pov", "story", "moment", "sleep")] == ["b", "a", "b", "c"]

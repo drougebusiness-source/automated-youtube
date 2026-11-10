@@ -84,6 +84,22 @@ def analytics(root: Path):
     return build("youtubeAnalytics", "v2", credentials=_credentials(root), cache_discovery=False)
 
 
+def channel_id(yt, root: Path) -> str:
+    """The channel's ID (for subscribe links), remembered in state/channel.json."""
+    path = root / "state" / "channel.json"
+    if path.exists():
+        return json.loads(path.read_text()).get("id", "")
+    if yt is None:
+        return ""
+    try:
+        cid = yt.channels().list(part="id", mine=True).execute()["items"][0]["id"]
+        path.write_text(json.dumps({"id": cid}))
+        return cid
+    except Exception as exc:
+        log.warning("couldn't read the channel ID (%s); descriptions get a plain subscribe line", exc)
+        return ""
+
+
 def client(root: Path):
     from googleapiclient.discovery import build
 

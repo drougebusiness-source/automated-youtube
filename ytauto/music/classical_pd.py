@@ -66,4 +66,10 @@ def choose(catalog: dict[str, list[dict]], theme_name: str, total_seconds: float
 def make_tracks(root: Path, total_seconds: float, theme: dict, seed: int) -> list[tuple[Path, dict]]:
     catalog = load_catalog(root)
     cache = root / "assets" / "music_cache"
+    pool = list(catalog.get(theme["name"], []))
+    for extra in theme.get("music_also", []):
+        if sum(t["seconds"] for t in pool) >= total_seconds:
+            break  # only borrow pieces when the theme's own music would repeat
+        pool += [t for t in catalog.get(extra, []) if t not in pool]
+    catalog = {**catalog, theme["name"]: pool}
     return [(download(t, cache), t) for t in choose(catalog, theme["name"], total_seconds, seed)]

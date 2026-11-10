@@ -21,7 +21,7 @@ from zoneinfo import ZoneInfo
 
 import requests
 
-from . import paintings, pipeline, shorts, thumbs, youtube
+from . import metadata, paintings, pipeline, shorts, thumbs, youtube
 from .config import Config
 from .music import classical_pd
 from .shorts import Caption as C, ShortSpec
@@ -75,9 +75,12 @@ def _facts(pid: int) -> dict:
 def _link_for(kind: str, longs: list[dict]) -> dict | None:
     by_slot = {i["slot"]: i for i in longs}
     by_theme = {i["theme"]: i for i in longs}
-    pick = {"pov": by_theme.get("Rainy Study") or by_slot.get(0),
-            "story": by_slot.get(1), "moment": by_slot.get(2),
-            "sleep": by_theme.get("Deep Sleep") or by_slot.get(0)}[kind]
+    by_len = {i["minutes"]: i for i in longs}
+    longest = max(longs, key=lambda i: i["minutes"]) if longs else None
+    pick = {"pov": by_theme.get("Rainy Study") or by_len.get(60) or by_slot.get(0),
+            "story": by_len.get(60) or by_slot.get(1),
+            "moment": by_len.get(30) or by_slot.get(2),
+            "sleep": by_len.get(180) or by_theme.get("Deep Sleep") or longest}[kind]
     return pick or (longs[0] if longs else None)
 
 
@@ -165,13 +168,14 @@ def plan_short(cfg, kind: str, day_index: int, link: dict, avoid_paintings: set[
         spec = ShortSpec("sleep", p_path, a_path, 58, "start", caps, darken=0.12, reverse=True)
         title = f"Close your eyes: {last} for sleep #shorts"
     url = f"https://youtu.be/{link['video_id']}"
-    description = "\n\n".join([
+    description = "\n\n".join([p for p in [
         f"Full version: {url}",
+        metadata.subscribe_line(cfg.raw, youtube.channel_id(None, cfg.root)),
         f"Music: {composer} – {piece}. Recording by Musopen (musopen.org), public domain.",
         paintings.credit(painting),
         f"{cfg['channel']['name']}: timeless classical music and art, for sleep, study and calm.",
         "#shorts #classicalmusic #relaxingmusic",
-    ])
+    ] if p])
     meta = {"title": title[:100], "description": description,
             "tags": ["shorts", "classical music", last.lower(), link["theme"].lower(), "relaxing music"]}
     item = {"kind": kind, "painting": painting["id"], "track": track["file"], "links_to": link["video_id"],
@@ -187,6 +191,7 @@ def run_shorts(cfg: Config, start: date, days: int, upload: bool = True, stop_at
     tz = ZoneInfo(cfg["channel"].get("timezone", "UTC"))
     now = datetime.now(timezone.utc)
     yt = youtube.client(cfg.root) if upload else None
+    youtube.channel_id(yt, cfg.root)
     can_upload, ok = upload, True
     for d in range(days):
         day = start + timedelta(days=d)
@@ -253,6 +258,25 @@ def run_shorts(cfg: Config, start: date, days: int, upload: bool = True, stop_at
     return ok
 
 
+QUESTIONS_FROM = "2026-11-13"
+QUESTIONS = {
+    "Deep Sleep": ["How long does it take you to fall asleep with this on? 🌙",
+                   "Which piece were you still awake for? Leave the timestamp below.",
+                   "Where are you listening from tonight? Sleep well."],
+    "Rainy Study": ["What are you studying or working on today? 📚",
+                    "Which piece helped you focus most? Drop the timestamp.",
+                    "Rain outside where you are right now, or just in here?"],
+    "Morning Light": ["What's the first thing you do in the morning? ☀️",
+                      "Coffee or tea with this one?",
+                      "Which piece would you wake up to every day?"],
+    "Forest Wind": ["What are you reading at the moment? 🍃",
+                    "Which composer should we play more of?",
+                    "Where would you rather be listening to this: forest, lake or garden?"],
+    "*": ["Which piece was your favourite? Leave the timestamp below.",
+          "Which composer should we play more of?"],
+}
+
+
 def post_link_comments(cfg: Config) -> bool:
     """Posts "Full version: <link>" under every Short that has gone public and has no comment yet.
     Kept in state/comments.json so it never clashes with a running Shorts batch."""
@@ -291,6 +315,32 @@ def post_link_comments(cfg: Config) -> bool:
                 ok = False
                 log.warning("  couldn't comment on %s: %s", vid, msg[:200])
                 if "insufficient" in msg.lower() or "quota" in msg.lower():
+                    break
+        path.write_text(json.dumps(posted, indent=1), encoding="utf-8")
+    # A question under each long video once it is public (from the Nov 13 batch on), to get
+    # people talking: comments help YouTube recommend a video.
+    for item in longs.values():
+        vid = item["video_id"]
+        if vid in posted or item["publish_date"] < QUESTIONS_FROM or not item.get("scheduled_for"):
+            continue
+        if datetime.fromisoformat(item["scheduled_for"]) > now:
+            continue
+        qs = QUESTIONS.get(item["theme"], QUESTIONS["*"])
+        text = qs[date.fromisoformat(item["publish_date"]).toordinal() % len(qs)]
+        try:
+            r = yt.commentThreads().insert(part="snippet", body={"snippet": {"videoId": vid, "topLevelComment": {
+                "snippet": {"textOriginal": text}}}}).execute()
+            posted[vid] = {"comment_id": r.get("id"), "question": True, "at": now.isoformat(timespec="seconds")}
+            n += 1
+            log.info("  question on %s (%s)", vid, item["theme"])
+        except Exception as exc:
+            msg = str(exc)
+            if "commentsDisabled" in msg or "disabled comments" in msg:
+                posted[vid] = {"skipped": "comments disabled"}
+            else:
+                ok = False
+                log.warning("  couldn't comment on %s: %s", vid, msg[:200])
+                if "quota" in msg.lower():
                     break
         path.write_text(json.dumps(posted, indent=1), encoding="utf-8")
     log.info("Link comments: %d posted now, %d in total", n, sum(1 for v in posted.values() if v.get("comment_id")))

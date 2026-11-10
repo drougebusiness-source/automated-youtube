@@ -13,7 +13,7 @@ on:
         description: "First schedule date (YYYY-MM-DD). Leave empty for tomorrow."
         default: ""
       first_day_slots:
-        description: "Only these slots on the first day (0=8AM 1-hour, 1=1PM 30-min, 2=7PM 15-min), e.g. 0. Empty = all."
+        description: "Only these slots on the first day (0=8AM 1-hour, 1=1PM 30-min, 2=8PM 3-hour), e.g. 0. Empty = all."
         default: ""
   schedule:
     - cron: "41 10 * * *"   # daily: continue an unfinished batch (does nothing once it's done)
