@@ -72,7 +72,13 @@ jobs:
           missing = [i for i in items if not i.get("video_id")]
           today = datetime.now(ZoneInfo("America/New_York")).date().isoformat()
           print(f"{sum(1 for i in items if i.get('video_id'))} uploaded, {len(missing)} waiting")
-          sys.exit(0 if not missing or today > last else 3)
+          # Days whose long videos aren't uploaded yet have no Shorts planned: keep going daily.
+          have = {i["publish_date"] for i in items}
+          unplanned = [d for d in ((start + timedelta(days=k)).isoformat() for k in range(days))
+                       if d >= today and d not in have]
+          if unplanned:
+              print("waiting for long videos on", ", ".join(unplanned))
+          sys.exit(0 if (not missing and not unplanned) or today > last else 3)
           PY
       - name: Save progress
         if: always() && steps.plan.outputs.run == 'yes'
