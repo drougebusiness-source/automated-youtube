@@ -61,7 +61,7 @@ jobs:
       - name: Install ffmpeg and Python packages
         if: steps.plan.outputs.run == 'yes'
         run: |
-          sudo apt-get update && sudo apt-get install -y ffmpeg
+          for i in 1 2 3 4; do sudo apt-get update && sudo apt-get install -y --fix-missing ffmpeg && break; echo "apt failed, retrying in 60s"; sleep 60; done; command -v ffmpeg
           pip install -r requirements.txt
       - name: Reuse downloaded music and paintings
         if: steps.plan.outputs.run == 'yes'
