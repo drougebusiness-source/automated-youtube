@@ -131,13 +131,45 @@ def main_composer(tracklist: list[dict], seconds: float) -> str:
     return name.split()[-1] if secs >= seconds * 0.5 else ""
 
 
-def standard_title(theme: dict, minutes: int, composer: str = "") -> str:
-    """'[Theme] | [Length] of Calm Classical Piano for [Use]' (+ ' · Chopin' when one composer dominates)."""
+def painting_names(painting: dict | None) -> list[str]:
+    """Short ways to name a painting in a title, longest first: 'Moonrise (Inness)', 'Moonrise'.
+    Subtitles after ':', '(' or a dash are dropped ('Trouville (Grey and Green...)' -> 'Trouville')."""
+    if not painting or not painting.get("title"):
+        return []
+    import re
+    short = re.split(r"\s*[:(—–]\s*|\s+-\s+", painting["title"])[0].strip(" ,.")
+    if not short:
+        return []
+    artist = (painting.get("artist") or "").split()
+    return ([f"{short} ({artist[-1]})"] if artist else []) + [short]
+
+
+def standard_title(theme: dict, minutes: int, composer: str = "", painting: dict | None = None,
+                   taken: set[str] | list[str] = ()) -> str:
+    """'[Theme] | [Length] of Calm Classical Piano for [Use]', ending with the video's painting
+    ('· Moonrise (Inness)') so every video has its own title, else the main composer ('· Chopin').
+    A title already in `taken` is skipped when another option is free."""
     label = length_label(minutes).title()
     title = f"{theme['name']} | {label} of Calm {theme.get('style', 'Classical Music')} for {theme.get('use', 'Relaxation')}"
-    if composer and len(title) + len(composer) + 3 <= 100:
-        title += f" · {composer}"
-    return title
+    taken = set(taken)
+    names = painting_names(painting)
+    options = [f"{title} · {n}" for n in names]
+    if names and len(options[-1]) > 100:  # long painting name: cut it at a word, e.g. 'Sea View, Calm…'
+        words, room = names[-1].split(), 100 - len(title) - 4
+        while words and len(" ".join(words)) > room:
+            words.pop()
+        while words and words[-1].lower().strip(",;") in {"a", "an", "and", "at", "in", "near", "of", "on", "the", "to", "with"}:
+            words.pop()  # don't end on 'of…' or 'the…'
+        if len(words) >= 2:
+            options.append(f"{title} · {' '.join(words).rstrip(',;')}…")
+    if composer:
+        options += [f"{title} · {n} · {composer}" for n in painting_names(painting)] + [f"{title} · {composer}"]
+    options = [o for o in options if len(o) <= 100] + [title]
+    free = next((o for o in options if o not in taken), None)
+    if free:
+        return free
+    base = options[0]  # every option used before (a reused painting): number it
+    return next((f"{base} · {n}" for n in range(2, 1000) if f"{base} · {n}" not in taken), base)
 
 
 def subscribe_line(cfg: dict, channel_id: str = "") -> str:

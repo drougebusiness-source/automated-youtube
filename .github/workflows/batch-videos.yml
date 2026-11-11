@@ -16,7 +16,7 @@ on:
         description: "Only these slots on the first day (0=8AM 1-hour, 1=1PM 30-min, 2=8PM 3-hour), e.g. 0. Empty = all."
         default: ""
   schedule:
-    - cron: "41 10 * * *"   # daily: continue an unfinished batch (does nothing once it's done)
+    - cron: "41 10 * * *"   # daily: continue an unfinished batch, or start the next 7 days when under 10 are queued
 
 permissions:
   contents: write
@@ -35,6 +35,25 @@ jobs:
       - name: Is there a batch to make or continue?
         id: plan
         run: |
+          # Keep the queue full by itself: when fewer than 10 days of long videos are planned,
+          # the daily run asks for the next 7 days (Nov 11, approved proposal).
+          if [ "${{ github.event_name }}" = "schedule" ] && [ ! -f state/batch_request.json ]; then
+            python3 - <<'PY'
+          import json
+          from datetime import date, datetime, timedelta
+          from zoneinfo import ZoneInfo
+          tz = ZoneInfo("America/New_York")  # config.yaml channel.timezone
+          today = datetime.now(tz).date()
+          items = json.load(open("state/batch.json"))["items"]
+          last = max([today] + [date.fromisoformat(i["publish_date"]) for i in items])
+          if (last - today).days < 10:
+              start = (last + timedelta(days=1)).isoformat()
+              json.dump({"days": 7, "start": start, "first_day_slots": ""}, open("state/batch_request.json", "w"))
+              print(f"Only {(last - today).days} days queued: starting 7 more days from {start}")
+          else:
+              print(f"{(last - today).days} days queued: nothing to do")
+          PY
+          fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "run=yes" >> "$GITHUB_OUTPUT"
             echo "days=${{ inputs.days }}" >> "$GITHUB_OUTPUT"
@@ -81,7 +100,7 @@ jobs:
           DAYS="${{ steps.plan.outputs.days }}"
           FIRST="${{ steps.plan.outputs.first }}"
           echo "{\"days\": $DAYS, \"start\": \"$START\", \"first_day_slots\": \"$FIRST\"}" > state/batch_request.json
-          ARGS="--days $DAYS --start $START --stop-at-limit"
+          ARGS="--days $DAYS --start $START --stop-at-limit --max-minutes 290"  # ends before the 350-minute limit
           if [ -n "$FIRST" ]; then ARGS="$ARGS --first-day-slots $FIRST"; fi
           python -m ytauto batch $ARGS || echo "Some videos failed; they will be retried next run."
           # Finished when every planned video is uploaded: stop the daily continuation.

@@ -26,6 +26,7 @@ def main() -> int:
     p_batch.add_argument("--first-day-slots", help="only these slots on the first day, e.g. 0 or 1,2")
     p_batch.add_argument("--stop-at-limit", action="store_true",
                          help="stop making videos once YouTube's daily upload limit is reached")
+    p_batch.add_argument("--max-minutes", type=float, help="don't start a new video after this many minutes")
     sub.add_parser("upload-pending", help="upload batch videos that are still waiting")
     sub.add_parser("schedule", help="give uploaded batch videos their publish date and time")
     p_sh = sub.add_parser("shorts", help="make 4 Shorts a day linked to that day's long videos")
@@ -64,7 +65,7 @@ def main() -> int:
         from .batch import run_batch
         ok = run_batch(cfg, args.days, upload=not args.no_upload,
                        start=date.fromisoformat(args.start) if args.start else None,
-                       stop_at_limit=args.stop_at_limit,
+                       stop_at_limit=args.stop_at_limit, max_minutes=args.max_minutes,
                        first_day_slots={int(x) for x in args.first_day_slots.split(",")} if args.first_day_slots else None)
         return 0 if ok else 1
     if args.cmd == "shorts":

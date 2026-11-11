@@ -259,3 +259,28 @@ def test_shorts_link_to_new_slots():
              {"slot": 1, "minutes": 30, "theme": "Rainy Study", "video_id": "b"},
              {"slot": 2, "minutes": 180, "theme": "Deep Sleep", "video_id": "c"}]
     assert [_link_for(k, longs)["video_id"] for k in ("pov", "story", "moment", "sleep")] == ["b", "a", "b", "c"]
+
+
+def test_titles_end_with_the_painting_and_never_repeat():
+    from ytauto import metadata
+    cfg = load_config()
+    th = next(t for t in cfg.themes if t["name"] == "Deep Sleep")
+    moon = {"title": "Moonrise", "artist": "George Inness"}
+    t1 = metadata.standard_title(th, 180, "", moon)
+    assert t1 == "Deep Sleep | 3 Hours of Calm Classical Piano for Sleep & Deep Rest · Moonrise (Inness)"
+    long = {"title": "Cliffs on the Sea Coast: Small Beach, Sunrise (Falaise au bord de la mer)", "artist": "Claude Monet"}
+    assert metadata.standard_title(th, 180, "", long).endswith("· Cliffs on the Sea Coast (Monet)")
+    taken = {t1}
+    t2 = metadata.standard_title(th, 180, "Chopin", moon, taken)
+    assert t2 != t1 and len(t2) <= 100
+    taken.add(t2)
+    t3 = metadata.standard_title(th, 180, "", moon, taken)
+    assert t3 not in taken and len(t3) <= 100
+    # every painting in the catalog gives a title within YouTube's 100 characters
+    import json
+    cat = json.loads((cfg.root / "assets" / "paintings.json").read_text(encoding="utf-8"))["themes"]
+    for name, ps in cat.items():
+        theme = next((t for t in cfg.themes if t["name"] == name), th)
+        for p in ps:
+            for m in (30, 60, 180):
+                assert len(metadata.standard_title(theme, m, "Chopin", p)) <= 100

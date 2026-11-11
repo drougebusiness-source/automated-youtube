@@ -13,7 +13,7 @@ on:
         description: "How many days of Shorts"
         default: "7"
   schedule:
-    - cron: "23 11 * * *"   # daily: continue an unfinished Shorts run
+    - cron: "23 11 * * *"   # daily: continue an unfinished Shorts run, or start the next 7 days when under 10 are queued
 
 permissions:
   contents: write
@@ -33,6 +33,24 @@ jobs:
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "{\"start\": \"${{ inputs.start }}\", \"days\": ${{ inputs.days }}}" > state/shorts_request.json
+          fi
+          # Keep the queue full by itself: when fewer than 10 days of Shorts are planned, the
+          # daily run asks for the next 7 days. Days whose long videos aren't made yet wait for them.
+          if [ "${{ github.event_name }}" = "schedule" ] && [ ! -f state/shorts_request.json ]; then
+            python3 - <<'PY'
+          import json
+          from datetime import date, datetime, timedelta
+          from zoneinfo import ZoneInfo
+          today = datetime.now(ZoneInfo("America/New_York")).date()
+          items = json.load(open("state/shorts.json"))["items"]
+          last = max([today] + [date.fromisoformat(i["publish_date"]) for i in items])
+          if (last - today).days < 10:
+              start = (last + timedelta(days=1)).isoformat()
+              json.dump({"start": start, "days": 7}, open("state/shorts_request.json", "w"))
+              print(f"Only {(last - today).days} days of Shorts queued: starting 7 more days from {start}")
+          else:
+              print(f"{(last - today).days} days of Shorts queued: nothing to do")
+          PY
           fi
           if [ -f state/shorts_request.json ]; then echo "run=yes" >> "$GITHUB_OUTPUT"; else echo "run=no" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/setup-python@v5

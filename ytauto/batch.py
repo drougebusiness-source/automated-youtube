@@ -7,6 +7,7 @@ import csv
 import json
 import logging
 import shutil
+import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from zoneinfo import ZoneInfo
@@ -99,9 +100,13 @@ def _upload_item(cfg: Config, yt, item: dict) -> None:
 
 
 def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = None,
-              stop_at_limit: bool = False, first_day_slots: set[int] | None = None) -> bool:
+              stop_at_limit: bool = False, first_day_slots: set[int] | None = None,
+              max_minutes: float | None = None) -> bool:
     """stop_at_limit: stop making videos once YouTube's daily limit is hit (for servers that
-    don't keep files between runs). The next run continues where this one stopped."""
+    don't keep files between runs). The next run continues where this one stopped.
+    max_minutes: don't start a new video after this many minutes, so a GitHub run ends cleanly
+    before its time limit instead of being cut off mid-upload."""
+    started = time.monotonic()
     ffmpeg.require_ffmpeg()
     data = load(cfg)
     state = pipeline.load_state(cfg)
@@ -128,6 +133,10 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
                 if can_upload and not item.get("video_id"):
                     can_upload = _try_upload(cfg, yt, item, data)
                 continue
+            if max_minutes is not None and (time.monotonic() - started) / 60 >= max_minutes:
+                log.info("Stopping for today: %.0f minutes used. The next run continues from here.", max_minutes)
+                save(cfg, data)
+                return ok
             if stop_at_limit and upload and not can_upload:
                 log.info("Stopping for today: YouTube's upload limit was reached. Run again tomorrow to continue.")
                 save(cfg, data)
@@ -157,7 +166,8 @@ def run_batch(cfg: Config, days: int, upload: bool = True, start: date | None = 
                 # Each theme cycles through the title wordings, so repeat themes get new titles.
                 variant = sum(1 for i in data["items"] if i["theme"] == theme["name"] and (i["publish_date"], i["slot"]) != (pd, slot))
                 meta = metadata.generate(theme, minutes, cfg.raw, recent_titles, variant=variant)
-                meta.title = metadata.standard_title(theme, minutes, metadata.main_composer(files["tracklist"], minutes * 60))
+                meta.title = metadata.standard_title(theme, minutes, metadata.main_composer(files["tracklist"], minutes * 60),
+                                                     painting, recent_titles)
                 credit = paintings.credit(painting) if painting else ""
                 description = metadata.full_description(meta, cfg.raw, pipeline.credits_block(cfg, files, painting), channel)
                 (folder / "metadata.json").write_text(json.dumps(
