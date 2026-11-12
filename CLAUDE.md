@@ -51,7 +51,8 @@ Uploads from this (unaudited) API project are forced to private, then scheduled 
   all branded "REST AND RELAXATION"; each links to a long video (sleep → the 3-hour Deep Sleep).
 
 ## Status (Nov 11, 2026)
-- Scheduled through **Nov 22** (30 long videos + 40 Shorts from Nov 13). Nov 23–26 were being made on Nov 11.
+- Scheduled through **Nov 26** (42 long videos + 56 Shorts from Nov 13, confirmed Nov 12). The batch and Shorts
+  workflows now refill the queue by themselves and retry the ffmpeg install if Ubuntu's mirrors fail.
 - Nov 10 numbers: **38 subscribers**, 8,961 views, **533 watch hours** (12 months), ~15–30 watch h/day,
   avg view 6–8 min. Subscribers jumped once Shorts started (3 in 5 days → 10 in 4 days).
 - Shorts views/day per Short: **POV ~207**, sleep ~87, moment ~56, story ~25. Long videos ~5–6.
