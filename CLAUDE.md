@@ -47,7 +47,7 @@ Uploads from this (unaudited) API project are forced to private, then scheduled 
 - **Titles:** "[Theme] | [Length] of Calm [Style] for [Use]" + main composer; since 102de86, also the painting so no title repeats.
 - **Descriptions:** a subscribe link first, then the tracklist with timestamps, then art and music credits.
 - **Thumbnails:** design A (whole painting) is the default and won ~3x. Every 5th video tests B.
-- **Shorts (Eastern):** 07:00 POV, 12:00 second POV (was painting story; approved Nov 16, applies to Shorts made from then on), 16:00 musical moment, 21:00 sleep;
+- **Shorts (Eastern):** 07:00 POV, 12:00 painting story, 16:00 musical moment, 21:00 sleep;
   all branded "REST AND RELAXATION"; each links to a long video (sleep → the 3-hour Deep Sleep).
 
 ## Status (Nov 11, 2026; Nov 16 stats below)
@@ -65,8 +65,9 @@ Uploads from this (unaudited) API project are forced to private, then scheduled 
 
 ## Open items
 1. Done (Nov 16): handle `@RestandRelaxation-Loopvideos` is in `config.yaml` (shown on Shorts made from then on).
-2. Done (Nov 16): the 12:00 Short is a second POV, linking to a different long video from the 07:00 one.
-   Shorts already scheduled through Nov 26 keep the story at 12:00. Compare POV views per slot in the next stats.
+2. On hold (Nov 16): replacing the 12:00 story Short with a second POV. Nov 16 stats showed the types about even
+   (moment 22.4, POV 19.1, story 18.8, sleep 14.8 views/Short/day, ~11 each), so the early 8x gap was noise.
+   The code is in git history (commit e69cd4a, reverted). Recheck at ~25 Shorts per type.
 3. Darrell has added the watermark (assets/watermark.png) and channel keywords in Studio. Suggested but not
    confirmed: an end screen with Subscribe on the top video (Rainy Study 1-hour).
 4. Re-run Channel stats every week or two and compare against the numbers above.

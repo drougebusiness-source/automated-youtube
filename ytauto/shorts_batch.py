@@ -1,7 +1,7 @@
 """Four Shorts a day, each pointing to one of that day's long videos.
 
   07:00 pov     - relatable hook          -> the day's Rainy Study video (else the 1-hour one)
-  12:00 pov     - a second POV hook       -> a different long video from the 07:00 one (not the 3-hour)
+  12:00 story   - the painting's story    -> the day's 30-minute video
   16:00 moment  - a piece's high point    -> the day's 15-minute video
   21:00 sleep   - wind-down before bed    -> the day's Deep Sleep video (else the 1-hour one)
 
@@ -29,9 +29,7 @@ from .visuals import length_label
 
 log = logging.getLogger(__name__)
 
-# POV Shorts got ~8x the views of painting-story Shorts (Nov 10 stats), so 12:00 is a second POV since Nov 16.
-# The "story" kind still works if a slot is set back to it.
-SLOTS = [("pov", "07:00"), ("pov", "12:00"), ("moment", "16:00"), ("sleep", "21:00")]
+SLOTS = [("pov", "07:00"), ("story", "12:00"), ("moment", "16:00"), ("sleep", "21:00")]
 HOOKS = {
     "Rainy Study": ["POV: it's raining and you still have to study", "POV: 2 AM, one more chapter to go",
                     "POV: library window, rain outside, deadline tomorrow", "POV: rainy Sunday, notes everywhere"],
@@ -74,16 +72,11 @@ def _facts(pid: int) -> dict:
         return {}
 
 
-def _link_for(kind: str, longs: list[dict], second: bool = False) -> dict | None:
+def _link_for(kind: str, longs: list[dict]) -> dict | None:
     by_slot = {i["slot"]: i for i in longs}
     by_theme = {i["theme"]: i for i in longs}
     by_len = {i["minutes"]: i for i in longs}
     longest = max(longs, key=lambda i: i["minutes"]) if longs else None
-    if kind == "pov" and second:
-        # The noon POV points to a video the morning POV did not, skipping the 3-hour Deep Sleep.
-        first = _link_for("pov", longs)
-        others = [i for i in sorted(longs, key=lambda i: i["slot"]) if i is not first and i["minutes"] < 180]
-        return others[0] if others else first
     pick = {"pov": by_theme.get("Rainy Study") or by_len.get(60) or by_slot.get(0),
             "story": by_len.get(60) or by_slot.get(1),
             "moment": by_len.get(30) or by_slot.get(2),
@@ -107,7 +100,7 @@ def _pick_track(cfg, theme: str, avoid: set[str], used: list[str], min_seconds: 
 
 
 def plan_short(cfg, kind: str, day_index: int, link: dict, avoid_paintings: set[int], avoid_tracks: set[str],
-               data: dict, second: bool = False) -> tuple[ShortSpec, dict]:
+               data: dict) -> tuple[ShortSpec, dict]:
     theme = "Deep Sleep" if kind == "sleep" else link["theme"]
     used_p = [i["painting"] for i in data["items"]]
     used_t = [i["track"] for i in data["items"]]
@@ -135,7 +128,7 @@ def plan_short(cfg, kind: str, day_index: int, link: dict, avoid_paintings: set[
     G = thumbs.GOLD
     if kind == "pov":
         hooks = HOOKS.get(theme, HOOKS["Rainy Study"])
-        hook = hooks[(day_index + (1 if second else 0)) % len(hooks)]
+        hook = hooks[day_index % len(hooks)]
         caps = [C(hook, 0.3, 15, 300, 78, "serif", "Bold"),
                 C(f"{last} · {piece.split(':')[0]}", 2, 49.5, 1390, 42, "text", "SemiBold", G),
                 C(cta, 36, 49.5, 1460, 44, "text", "Bold")]
@@ -219,12 +212,11 @@ def run_shorts(cfg: Config, start: date, days: int, upload: bool = True, stop_at
             if stop_at_limit and upload and not can_upload:
                 save(cfg, data)
                 return ok
-            second = any(k == kind for k, _ in SLOTS[:slot])
-            link = _link_for(kind, longs, second)
+            link = _link_for(kind, longs)
             folder = cfg.output_dir / "shorts" / pd / f"{slot}-{kind}"
             log.info("[short] %s %s %s -> %s", pd, hhmm, kind, link["theme"])
             try:
-                spec, plan = plan_short(cfg, kind, d, link, avoid_p, avoid_t, data, second)
+                spec, plan = plan_short(cfg, kind, d, link, avoid_p, avoid_t, data)
                 folder.mkdir(parents=True, exist_ok=True)
                 video = shorts.render(spec, folder / "short.mp4", cfg.root, folder / "work",
                                       cfg["channel"]["name"], cfg["channel"].get("handle", ""))
