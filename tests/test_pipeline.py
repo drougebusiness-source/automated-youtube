@@ -259,6 +259,13 @@ def test_shorts_link_to_new_slots():
              {"slot": 1, "minutes": 30, "theme": "Rainy Study", "video_id": "b"},
              {"slot": 2, "minutes": 180, "theme": "Deep Sleep", "video_id": "c"}]
     assert [_link_for(k, longs)["video_id"] for k in ("pov", "story", "moment", "sleep")] == ["b", "a", "b", "c"]
+    assert _link_for("pov", longs, second=True)["video_id"] == "a"  # noon POV: a different video, not the 3-hour
+
+
+def test_noon_short_is_a_second_pov():
+    from ytauto.shorts_batch import SLOTS
+    assert [k for k, _ in SLOTS] == ["pov", "pov", "moment", "sleep"]
+    assert [h for _, h in SLOTS] == ["07:00", "12:00", "16:00", "21:00"]
 
 
 def test_titles_end_with_the_painting_and_never_repeat():

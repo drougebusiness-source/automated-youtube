@@ -47,7 +47,7 @@ Uploads from this (unaudited) API project are forced to private, then scheduled 
 - **Titles:** "[Theme] | [Length] of Calm [Style] for [Use]" + main composer; since 102de86, also the painting so no title repeats.
 - **Descriptions:** a subscribe link first, then the tracklist with timestamps, then art and music credits.
 - **Thumbnails:** design A (whole painting) is the default and won ~3x. Every 5th video tests B.
-- **Shorts (Eastern):** 07:00 POV, 12:00 painting story, 16:00 musical moment, 21:00 sleep;
+- **Shorts (Eastern):** 07:00 POV, 12:00 second POV (was painting story; approved Nov 16, applies to Shorts made from then on), 16:00 musical moment, 21:00 sleep;
   all branded "REST AND RELAXATION"; each links to a long video (sleep → the 3-hour Deep Sleep).
 
 ## Status (Nov 11, 2026)
@@ -62,8 +62,8 @@ Uploads from this (unaudited) API project are forced to private, then scheduled 
 
 ## Open items
 1. Ask Darrell for the channel **@handle** and put it in `config.yaml` → `channel.handle` (shown on Shorts).
-2. Proposed, not yet approved: replace the 12:00 painting-story Short with a second POV Short
-   (POV ~8x the views).
+2. Done (Nov 16): the 12:00 Short is a second POV, linking to a different long video from the 07:00 one.
+   Shorts already scheduled through Nov 26 keep the story at 12:00. Compare POV views per slot in the next stats.
 3. Darrell has added the watermark (assets/watermark.png) and channel keywords in Studio. Suggested but not
    confirmed: an end screen with Subscribe on the top video (Rainy Study 1-hour).
 4. Re-run Channel stats every week or two and compare against the numbers above.
