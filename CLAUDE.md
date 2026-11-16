@@ -50,18 +50,21 @@ Uploads from this (unaudited) API project are forced to private, then scheduled 
 - **Shorts (Eastern):** 07:00 POV, 12:00 second POV (was painting story; approved Nov 16, applies to Shorts made from then on), 16:00 musical moment, 21:00 sleep;
   all branded "REST AND RELAXATION"; each links to a long video (sleep → the 3-hour Deep Sleep).
 
-## Status (Nov 11, 2026)
+## Status (Nov 11, 2026; Nov 16 stats below)
 - Scheduled through **Nov 26** (42 long videos + 56 Shorts from Nov 13, confirmed Nov 12). The batch and Shorts
   workflows now refill the queue by themselves and retry the ffmpeg install if Ubuntu's mirrors fail.
 - Nov 10 numbers: **38 subscribers**, 8,961 views, **533 watch hours** (12 months), ~15–30 watch h/day,
   avg view 6–8 min. Subscribers jumped once Shorts started (3 in 5 days → 10 in 4 days).
 - Shorts views/day per Short: **POV ~207**, sleep ~87, moment ~56, story ~25. Long videos ~5–6.
+- Nov 16 numbers: **44 subscribers** (+9 in 7 days), 12,879 views, **607 watch hours** (12 months), ~10 watch h/day
+  last 7 days. 12-month subs: Shorts +13 from 4,390 views, long videos +18 from 7,505 views (596 of the watch hours).
+  Per-Short views/day now: moment 22.4, POV 19.1, story 18.8, sleep 14.8. 3-hour Deep Sleep ~11/day (3 videos).
 - Long-video themes by views per video: Deep Sleep and Rainy Study best; Starlight/Ocean worst.
 - Projection: watch hours reach 3,000–4,000 around Feb–Jun 2027. **Subscribers are the bottleneck**
   (~2.5/day → 500 by ~May, 1,000 in ~a year). Shorts are the main lever.
 
 ## Open items
-1. Ask Darrell for the channel **@handle** and put it in `config.yaml` → `channel.handle` (shown on Shorts).
+1. Done (Nov 16): handle `@RestandRelaxation-Loopvideos` is in `config.yaml` (shown on Shorts made from then on).
 2. Done (Nov 16): the 12:00 Short is a second POV, linking to a different long video from the 07:00 one.
    Shorts already scheduled through Nov 26 keep the story at 12:00. Compare POV views per slot in the next stats.
 3. Darrell has added the watermark (assets/watermark.png) and channel keywords in Studio. Suggested but not

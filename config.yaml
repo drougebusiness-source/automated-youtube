@@ -4,7 +4,7 @@
 
 channel:
   name: "Rest and Relaxation"
-  handle: ""                         # your @handle, e.g. "@RestAndRelaxation" (shown on every Short)                 # used in descriptions and thumbnails
+  handle: "@RestandRelaxation-Loopvideos"   # the channel @handle, shown on every Short
   timezone: "America/New_York"       # times below are in this time zone
   # First line of every description (long videos and Shorts). {subscribe} becomes the channel's
   # subscribe link.
