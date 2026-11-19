@@ -28,6 +28,8 @@ jobs:
     timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref_name }}  # the latest code and state, not the commit from when the run was queued
       - name: Is there a Shorts run to make or continue?
         id: plan
         run: |

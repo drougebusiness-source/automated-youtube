@@ -6,7 +6,9 @@ from __future__ import annotations
 import csv
 import json
 import logging
+import os
 import shutil
+import subprocess
 import time
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
@@ -219,12 +221,60 @@ def _theme_for(cfg: Config, entry: dict, pd: str, state: dict, used_today: set[s
     return active[0]
 
 
+def checkpoint(cfg: Config, message: str) -> None:
+    """Push state/ to GitHub right away (Reed, approved 2026-11-19): a run that dies mid-batch
+    used to lose every upload it made, and the next run uploaded them all again. Only in
+    GitHub Actions (BATCH_CHECKPOINT=1); never fails the run."""
+    if os.environ.get("BATCH_CHECKPOINT") != "1":
+        return
+    root = str(cfg.root)
+    try:
+        subprocess.run(["git", "add", "-A", "state/"], cwd=root, check=True, capture_output=True)
+        if subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=root).returncode == 0:
+            return
+        subprocess.run(["git", "commit", "-q", "-m", message], cwd=root, check=True, capture_output=True)
+        subprocess.run(["git", "pull", "-q", "--rebase", "--autostash"], cwd=root, capture_output=True)
+        subprocess.run(["git", "push", "-q"], cwd=root, check=True, capture_output=True, timeout=120)
+    except Exception as exc:  # noqa: BLE001
+        log.warning("  couldn't save progress to GitHub yet (%s); the end of the run saves it", exc)
+
+
+_existing: list[dict] | None = None
+
+
+def _already_on_channel(cfg: Config, yt, item: dict) -> str | None:
+    """The id of a video already on the channel with this title and publish time, if any
+    (a crashed run may have uploaded it without saving)."""
+    global _existing
+    if _existing is None:
+        try:
+            _existing = youtube.recent_uploads(yt, youtube.channel_id(yt, cfg.root))
+        except Exception as exc:  # noqa: BLE001
+            log.warning("  couldn't list the channel's uploads (%s); skipping the duplicate check", exc)
+            _existing = []
+    when = pipeline.publish_time(cfg, date.fromisoformat(item["publish_date"]), item["publish_at"])
+    stamp = when.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M")
+    for v in _existing:
+        if v["title"] == item["title"] and v["publishAt"][:16] == stamp:
+            return v["id"]
+    return None
+
+
 def _try_upload(cfg: Config, yt, item: dict, data: dict) -> bool:
     """Returns False once YouTube's daily limit is reached, so later videos aren't attempted today."""
     try:
+        found = _already_on_channel(cfg, yt, item)
+        if found:
+            item["video_id"] = found
+            item["scheduled_for"] = item.get("scheduled_for") or "already on the channel"
+            log.info("  already on the channel (https://youtu.be/%s): reusing it, not uploading again", found)
+            save(cfg, data)
+            checkpoint(cfg, f"Batch progress: found {item['publish_date']} slot {item['slot']}")
+            return True
         log.info("  uploading as private: %s", item["title"])
         _upload_item(cfg, yt, item)
         save(cfg, data)
+        checkpoint(cfg, f"Batch progress: uploaded {item['publish_date']} slot {item['slot']}")
         return True
     except Exception as exc:
         if _is_limit(exc):

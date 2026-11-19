@@ -41,6 +41,7 @@ def main() -> int:
     p_sample = sub.add_parser("samples", help="make short previews of each theme to compare")
     p_sample.add_argument("--seconds", type=int, default=60)
     sub.add_parser("status", help="show recent uploads")
+    sub.add_parser("dupes", help="list scheduled/private videos that share a title and publish time (read only)")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s", datefmt="%H:%M:%S")
@@ -60,6 +61,19 @@ def main() -> int:
             print(f"{v['publish_date']}  {v['minutes']:>3} min  {v['theme']:<18} {v.get('url', '(not uploaded)')}  {v['title']}")
         return 0
 
+    if args.cmd == "dupes":
+        from collections import defaultdict
+        from . import youtube
+        yt = youtube.client(cfg.root)
+        groups = defaultdict(list)
+        for v in youtube.recent_uploads(yt, youtube.channel_id(yt, cfg.root)):
+            if v["publishAt"]:
+                groups[(v["title"], v["publishAt"][:16])].append(v["id"])
+        d = {k: ids for k, ids in groups.items() if len(ids) > 1}
+        for (title, when), ids in sorted(d.items(), key=lambda x: x[0][1]):
+            print(f"{when}Z  x{len(ids)}  {title}  " + " ".join(f"https://youtu.be/{i}" for i in ids))
+        print(f"{len(d)} duplicated slot(s), {sum(len(x) - 1 for x in d.values())} extra video(s). Nothing was deleted.")
+        return 0
     if args.cmd == "batch":
         from .batch import run_batch
         ok = run_batch(cfg, args.days, upload=not args.no_upload,

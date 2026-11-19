@@ -284,3 +284,20 @@ def test_titles_end_with_the_painting_and_never_repeat():
         for p in ps:
             for m in (30, 60, 180):
                 assert len(metadata.standard_title(theme, m, "Chopin", p)) <= 100
+
+
+def test_batch_reuses_a_video_already_on_the_channel(tmp_path, monkeypatch):
+    from datetime import timezone
+    from ytauto import batch
+    cfg = load_config()
+    item = {"publish_date": "2026-11-27", "slot": 0, "publish_at": cfg["schedule"]["videos"][0]["publish_at"],
+            "title": "Same Title", "folder": str(tmp_path)}
+    when = pipeline.publish_time(cfg, date(2026, 11, 27), item["publish_at"]).astimezone(timezone.utc)
+    monkeypatch.setattr(batch, "_existing", [{"id": "abc", "title": "Same Title",
+                                              "publishAt": when.strftime("%Y-%m-%dT%H:%M:%SZ"), "privacy": "private"}])
+    monkeypatch.setattr(batch, "save", lambda cfg, data: None)
+    monkeypatch.setattr(batch, "_upload_item", lambda *a: (_ for _ in ()).throw(AssertionError("uploaded again")))
+    assert batch._try_upload(cfg, None, item, {"items": [item]})
+    assert item["video_id"] == "abc"
+    other = dict(item, title="Different", video_id=None)
+    assert batch._already_on_channel(cfg, None, other) is None

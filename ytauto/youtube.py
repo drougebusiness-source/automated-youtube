@@ -162,3 +162,23 @@ def add_to_playlist(yt, playlist_id: str, video_id: str) -> None:
         part="snippet",
         body={"snippet": {"playlistId": playlist_id, "resourceId": {"kind": "youtube#video", "videoId": video_id}}},
     ).execute()
+
+
+def recent_uploads(yt, channel: str, limit: int = 300) -> list[dict]:
+    """The channel's latest uploads (private and scheduled ones too) as
+    {"id", "title", "publishAt", "privacy"}. About 1 quota unit per 50 videos."""
+    if not channel.startswith("UC"):
+        return []
+    uploads, ids, token = "UU" + channel[2:], [], None
+    while len(ids) < limit:
+        r = yt.playlistItems().list(part="contentDetails", playlistId=uploads, maxResults=50, pageToken=token).execute()
+        ids += [i["contentDetails"]["videoId"] for i in r.get("items", [])]
+        token = r.get("nextPageToken")
+        if not token:
+            break
+    out = []
+    for k in range(0, len(ids), 50):
+        r = yt.videos().list(part="snippet,status", id=",".join(ids[k:k + 50])).execute()
+        out += [{"id": v["id"], "title": v["snippet"]["title"], "publishAt": v["status"].get("publishAt", ""),
+                 "privacy": v["status"].get("privacyStatus", "")} for v in r.get("items", [])]
+    return out
