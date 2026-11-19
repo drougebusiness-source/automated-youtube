@@ -281,8 +281,8 @@ def post_link_comments(cfg: Config) -> bool:
     """Posts "Full version: <link>" under every Short that has gone public and has no comment yet.
     Kept in state/comments.json so it never clashes with a running Shorts batch."""
     if not youtube.can_comment(cfg.root):
-        log.warning("This sign-in can't post comments. Run scripts\\reauth.bat (or `python -m ytauto auth`) "
-                    "and paste the new token.json into the YOUTUBE_TOKEN_JSON secret.")
+        log.warning("This sign-in can't post comments. Run scripts\\reauth.bat on the PC "
+                    "(python -m ytauto signin <client_secret.json>); it updates the YOUTUBE_TOKEN_JSON secret.")
         return False
     path = cfg.state_dir / "comments.json"
     posted = json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}

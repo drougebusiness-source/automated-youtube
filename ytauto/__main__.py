@@ -34,9 +34,8 @@ def main() -> int:
     p_sh.add_argument("--days", type=int, default=7)
     p_sh.add_argument("--no-upload", action="store_true")
     p_sh.add_argument("--stop-at-limit", action="store_true")
-    p_re = sub.add_parser("reauth", help="sign in again from GitHub Actions (prints a link, then takes the answer)")
-    p_re.add_argument("--answer", default="")
-    p_re.add_argument("--answer-from-event", action="store_true")
+    p_si = sub.add_parser("signin", help="sign in on this PC and save it straight into the GitHub secret")
+    p_si.add_argument("client_file", help="the client_secret*.json from Google Cloud")
     sub.add_parser("comments", help="post a link to the full video under each Short once it is public")
     sub.add_parser("stats", help="views, likes and comments per video, grouped by theme and length")
     p_sample = sub.add_parser("samples", help="make short previews of each theme to compare")
@@ -72,19 +71,12 @@ def main() -> int:
         from .shorts_batch import run_shorts
         return 0 if run_shorts(cfg, date.fromisoformat(args.start), args.days, upload=not args.no_upload,
                                stop_at_limit=args.stop_at_limit) else 1
-    if args.cmd == "reauth":
-        from . import reauth
-        if args.answer_from_event:
-            import json as _j, os as _o
-            args.answer = (_j.load(open(_o.environ["GITHUB_EVENT_PATH"])).get("inputs") or {}).get("answer") or ""
-        if not args.answer.strip():
-            print("\nOPEN THIS LINK, pick the Rest and Relaxation account, tick every box and click Continue:\n")
-            print(reauth.link())
-            print("\nYour browser then shows a 'can't be reached' localhost page. Copy that page's full address.\n")
-            return 0
-        scopes = reauth.finish(cfg.root, args.answer)
-        print("Signed in. Permissions granted:", ", ".join(s.rsplit("/", 1)[-1] for s in scopes))
-        return 0
+    if args.cmd == "signin":
+        from pathlib import Path as _P
+        from .signin import run as _signin
+        missing = _signin(_P(args.client_file))
+        print("Saved to the GitHub secret.", "Missing permissions: " + ", ".join(missing) if missing else "All permissions granted.")
+        return 1 if missing else 0
     if args.cmd == "comments":
         from .shorts_batch import post_link_comments
         return 0 if post_link_comments(cfg) else 1

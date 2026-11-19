@@ -17,10 +17,9 @@ Read this first. It is the full handover for anyone (human or AI) working on thi
 - Python package `ytauto/`; settings in `config.yaml` (the only file to edit for normal changes).
 - State (committed by the bots): `state/batch.json` (long videos), `state/shorts.json`,
   `state/comments.json`, `state/channel.json` (channel ID UCwV7BkDpNfz_iJ7IuIFr8eg), `state/history.json`.
-- YouTube sign-in: GitHub secret `YOUTUBE_TOKEN_JSON`, plus a newer sign-in with comment and analytics
-  permissions stored **encrypted** in `state/token.enc` (key derived from that secret; only the
-  workflows can read it). To sign in again: run the "Sign in again" workflow with an empty answer,
-  open the link from its log, then run it again with the localhost address pasted as `answer`.
+- YouTube sign-in: GitHub secret `YOUTUBE_TOKEN_JSON` only (nothing sign-in related lives in this public repo).
+  To sign in again, on the PC: `scripts\reauth.bat` (= `python -m ytauto signin <client_secret.json>`); it opens
+  Google in the browser and pipes the result into the secret with `gh secret set`, never to a file or log.
   Never commit token.json, client_secret*.json or .env.
 
 ## What runs by itself (GitHub Actions)
@@ -30,7 +29,6 @@ Read this first. It is the full handover for anyone (human or AI) working on thi
 | Shorts (`shorts-videos.yml`) | 4 Shorts a day, each linked to that day's long video | Daily continuation (needs the long videos uploaded first) |
 | Link comments (`link-comments.yml`) | Posts the "full version" link under each Short once it's public; a question under each long video (from Nov 13) | Every 3 h |
 | Channel stats (`channel-stats.yml`) | Views, likes and watch hours; breakdowns by theme, length, thumbnail and Short type | On demand |
-| Sign in again (`reauth.yml`) | Re-authorizes YouTube without a computer | On demand |
 
 Batch and Shorts share the concurrency group `batch-videos`, so only one runs at a time and a newer
 *pending* run replaces an older pending one. If a dispatched run disappears, it was replaced:
