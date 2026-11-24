@@ -2138,6 +2138,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "KbssPIeMElA",
       "scheduled_for": "2026-12-06T18:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-06",
+      "slot": 2,
+      "publish_at": "20:00",
+      "minutes": 180,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 3 Hours of Calm Classical Piano for Sleep & Deep Rest \u00b7 Moonrise",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-06/2-180min-deep-sleep",
+      "painting": 64754,
+      "painting_credit": "Artwork: \"Moonrise\" by George Inness (1891). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/64754",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "2K8YM1KOcpE",
+      "scheduled_for": "2026-12-07T01:00:00+00:00"
     }
   ]
 }
