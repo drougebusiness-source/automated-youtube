@@ -2096,6 +2096,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "ib0E2EOIPWY",
       "scheduled_for": "2026-12-05T18:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-05",
+      "slot": 2,
+      "publish_at": "20:00",
+      "minutes": 180,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 3 Hours of Calm Classical Piano for Sleep & Deep Rest \u00b7 The Bedroom",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-05/2-180min-deep-sleep",
+      "painting": 28560,
+      "painting_credit": "Artwork: \"The Bedroom\" by Vincent van Gogh (1889). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/28560",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "Jp1Az8Ig66g",
+      "scheduled_for": "2026-12-06T01:00:00+00:00"
     }
   ]
 }
