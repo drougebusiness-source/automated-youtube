@@ -2040,6 +2040,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "cGLGcRySTMY",
       "scheduled_for": "2026-12-04T13:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-04",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Morning Light",
+      "title": "Morning Light | 30 Minutes of Calm Classical Music for a Calm Morning \u00b7 Water Lily Pond (Monet)",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-04/1-30min-morning-light",
+      "painting": 87088,
+      "painting_credit": "Artwork: \"Water Lily Pond\" by Claude Monet (1900). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/87088",
+      "thumbnail_variant": "B-detail",
+      "video_id": "eGKNRE0hQm0",
+      "scheduled_for": "2026-12-04T18:00:00+00:00"
     }
   ]
 }
