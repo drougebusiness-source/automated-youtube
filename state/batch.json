@@ -2026,6 +2026,20 @@
       "thumbnail_variant": "B-detail",
       "video_id": "3t_-Wn35awY",
       "scheduled_for": "2026-12-04T01:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-04",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 1 Hour of Calm Classical Piano for Studying & Focus \u00b7 Charing Cross Bridge, London",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-04/0-60min-rainy-study",
+      "painting": 16544,
+      "painting_credit": "Artwork: \"Charing Cross Bridge, London\" by Claude Monet (1901). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/16544",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "cGLGcRySTMY",
+      "scheduled_for": "2026-12-04T13:00:00+00:00"
     }
   ]
 }
