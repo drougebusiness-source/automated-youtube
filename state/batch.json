@@ -2068,6 +2068,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "Zm6HfRHZgyw",
       "scheduled_for": "2026-12-05T01:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-05",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Forest Wind",
+      "title": "Forest Wind | 1 Hour of Calm Classical Music for Reading & Unwinding \u00b7 Pond in the Woods (Pe\u00f1a)",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-05/0-60min-forest-wind",
+      "painting": 95993,
+      "painting_credit": "Artwork: \"Pond in the Woods\" by Narcisse Virgile Diaz de la Pe\u00f1a (1862). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/95993",
+      "thumbnail_variant": "B-detail",
+      "video_id": "hdxvzBna67Y",
+      "scheduled_for": "2026-12-05T13:00:00+00:00"
     }
   ]
 }
