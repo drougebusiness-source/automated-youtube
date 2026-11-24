@@ -2082,6 +2082,20 @@
       "thumbnail_variant": "B-detail",
       "video_id": "hdxvzBna67Y",
       "scheduled_for": "2026-12-05T13:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-05",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 30 Minutes of Calm Classical Piano for Studying & Focus \u00b7 Waterloo Bridge, Sunlight\u2026",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-05/1-30min-rainy-study",
+      "painting": 20701,
+      "painting_credit": "Artwork: \"Waterloo Bridge, Sunlight Effect\" by Claude Monet (1903). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/20701",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "ib0E2EOIPWY",
+      "scheduled_for": "2026-12-05T18:00:00+00:00"
     }
   ]
 }
