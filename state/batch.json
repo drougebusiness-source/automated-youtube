@@ -2276,6 +2276,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "f4zA2SRtoDI",
       "scheduled_for": "2026-12-10T01:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-10",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 1 Hour of Calm Classical Piano for Studying & Focus \u00b7 Paris Street; Rainy Day \u00b7 Chopin",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-10/0-60min-rainy-study",
+      "painting": 20684,
+      "painting_credit": "Artwork: \"Paris Street; Rainy Day\" by Gustave Caillebotte (1877). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/20684",
+      "thumbnail_variant": "B-detail",
+      "video_id": "i9Tzibv6CvI",
+      "scheduled_for": "2026-12-10T13:00:00+00:00"
     }
   ]
 }
