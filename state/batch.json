@@ -2152,6 +2152,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "2K8YM1KOcpE",
       "scheduled_for": "2026-12-07T01:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-07",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Morning Light",
+      "title": "Morning Light | 1 Hour of Calm Classical Music for a Calm Morning \u00b7 Poppy Field (Monet)",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-07/0-60min-morning-light",
+      "painting": 4783,
+      "painting_credit": "Artwork: \"Poppy Field (Giverny)\" by Claude Monet (1890\u201391). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/4783",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "6MpspF0hkGQ",
+      "scheduled_for": "2026-12-07T13:00:00+00:00"
     }
   ]
 }
