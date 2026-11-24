@@ -2180,6 +2180,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "PTikRK85vJk",
       "scheduled_for": "2026-12-07T18:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-07",
+      "slot": 2,
+      "publish_at": "20:00",
+      "minutes": 180,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 3 Hours of Calm Classical Piano for Sleep & Deep Rest \u00b7 Cows in a Pond at Sunset \u00b7 3",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-07/2-180min-deep-sleep",
+      "painting": 72398,
+      "painting_credit": "Artwork: \"Cows in a Pond at Sunset\" by Sanford Robinson Gifford (1860). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/72398",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "h0_3-zszDBs",
+      "scheduled_for": "2026-12-08T01:00:00+00:00"
     }
   ]
 }
