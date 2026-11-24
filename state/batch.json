@@ -2236,6 +2236,32 @@
       "thumbnail_variant": "B-detail",
       "video_id": "eqad-0tEwWg",
       "scheduled_for": "2026-12-09T01:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-09",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Forest Wind",
+      "title": "Forest Wind | 1 Hour of Calm Classical Music for Reading & Unwinding \u00b7 The Watermill with the Great\u2026 \u00b7 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-09/0-60min-forest-wind",
+      "painting": 869,
+      "painting_credit": "Artwork: \"The Watermill with the Great Red Roof\" by Meindert Hobbema (c. 1665). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/869",
+      "thumbnail_variant": "A-gallery"
+    },
+    {
+      "publish_date": "2026-12-09",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 30 Minutes of Calm Classical Piano for Studying & Focus",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-09/1-30min-rainy-study",
+      "painting": 30361,
+      "painting_credit": "Artwork: \"Entrance to the Port of Honfleur\" by Johan Barthold Jongkind (1863\u201364). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/30361",
+      "thumbnail_variant": "B-detail",
+      "video_id": "tLMw0P35ri4",
+      "scheduled_for": "2026-12-09T18:00:00+00:00"
     }
   ]
 }
