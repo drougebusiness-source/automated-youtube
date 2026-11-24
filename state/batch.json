@@ -2124,6 +2124,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "eAj2H97tO2g",
       "scheduled_for": "2026-12-06T13:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-06",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Forest Wind",
+      "title": "Forest Wind | 30 Minutes of Calm Classical Music for Reading & Unwinding \u00b7 Landscape with the Ruins\u2026",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-06/1-30min-forest-wind",
+      "painting": 60755,
+      "painting_credit": "Artwork: \"Landscape with the Ruins of the Castle of Egmond\" by Jacob van Ruisdael (1650\u201355). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/60755",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "KbssPIeMElA",
+      "scheduled_for": "2026-12-06T18:00:00+00:00"
     }
   ]
 }
