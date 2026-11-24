@@ -2262,6 +2262,20 @@
       "thumbnail_variant": "B-detail",
       "video_id": "tLMw0P35ri4",
       "scheduled_for": "2026-12-09T18:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-09",
+      "slot": 2,
+      "publish_at": "20:00",
+      "minutes": 180,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 3 Hours of Calm Classical Piano for Sleep & Deep Rest \u00b7 Branch of the Seine\u2026 \u00b7 3",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-09/2-180min-deep-sleep",
+      "painting": 16564,
+      "painting_credit": "Artwork: \"Branch of the Seine near Giverny (Mist)\" by Claude Monet (1897). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/16564",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "f4zA2SRtoDI",
+      "scheduled_for": "2026-12-10T01:00:00+00:00"
     }
   ]
 }
