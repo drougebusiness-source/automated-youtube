@@ -2194,6 +2194,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "h0_3-zszDBs",
       "scheduled_for": "2026-12-08T01:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-08",
+      "slot": 0,
+      "publish_at": "08:00",
+      "minutes": 60,
+      "theme": "Rainy Study",
+      "title": "Rainy Study | 1 Hour of Calm Classical Piano for Studying & Focus \u00b7 Approaching Storm",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-08/0-60min-rainy-study",
+      "painting": 27764,
+      "painting_credit": "Artwork: \"Approaching Storm\" by Eug\u00e8ne Louis Boudin (1864). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/27764",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "Q5lZsGV6sJI",
+      "scheduled_for": "2026-12-08T13:00:00+00:00"
     }
   ]
 }
