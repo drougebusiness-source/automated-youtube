@@ -2290,6 +2290,32 @@
       "thumbnail_variant": "B-detail",
       "video_id": "i9Tzibv6CvI",
       "scheduled_for": "2026-12-10T13:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-10",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Forest Wind",
+      "title": "Forest Wind | 30 Minutes of Calm Classical Music for Reading & Unwinding \u00b7 Souvenir of the Environs\u2026 \u00b7 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-10/1-30min-forest-wind",
+      "painting": 59002,
+      "painting_credit": "Artwork: \"Souvenir of the Environs of Lake Nemi\" by Jean Baptiste Camille Corot (1865). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/59002",
+      "thumbnail_variant": "A-gallery"
+    },
+    {
+      "publish_date": "2026-12-10",
+      "slot": 2,
+      "publish_at": "20:00",
+      "minutes": 180,
+      "theme": "Deep Sleep",
+      "title": "Deep Sleep | 3 Hours of Calm Classical Piano for Sleep & Deep Rest \u00b7 Trouville (Whistler) \u00b7 Chopin",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-10/2-180min-deep-sleep",
+      "painting": 81572,
+      "painting_credit": "Artwork: \"Trouville (Grey and Green, the Silver Sea)\" by James McNeill Whistler (1865). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/81572",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "BGwAAOE5KYo",
+      "scheduled_for": "2026-12-11T01:00:00+00:00"
     }
   ]
 }
