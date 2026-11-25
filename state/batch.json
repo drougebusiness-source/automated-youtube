@@ -2281,18 +2281,6 @@
     },
     {
       "publish_date": "2026-12-10",
-      "slot": 1,
-      "publish_at": "13:00",
-      "minutes": 30,
-      "theme": "Forest Wind",
-      "title": "Forest Wind | 30 Minutes of Calm Classical Music for Reading & Unwinding \u00b7 Souvenir of the Environs\u2026 \u00b7 2",
-      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-10/1-30min-forest-wind",
-      "painting": 59002,
-      "painting_credit": "Artwork: \"Souvenir of the Environs of Lake Nemi\" by Jean Baptiste Camille Corot (1865). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/59002",
-      "thumbnail_variant": "A-gallery"
-    },
-    {
-      "publish_date": "2026-12-10",
       "slot": 2,
       "publish_at": "20:00",
       "minutes": 180,
@@ -2318,6 +2306,20 @@
       "thumbnail_variant": "A-gallery",
       "video_id": "CYGDumQEPfM",
       "scheduled_for": "2026-12-09T13:00:00+00:00"
+    },
+    {
+      "publish_date": "2026-12-10",
+      "slot": 1,
+      "publish_at": "13:00",
+      "minutes": 30,
+      "theme": "Forest Wind",
+      "title": "Forest Wind | 30 Minutes of Calm Classical Music for Reading & Unwinding \u00b7 Catskill Mountains \u00b7 2",
+      "folder": "/home/runner/work/automated-youtube/automated-youtube/output/batch/2026-12-10/1-30min-forest-wind",
+      "painting": 68388,
+      "painting_credit": "Artwork: \"Catskill Mountains\" by George Inness (1870). Public domain (CC0), courtesy of the Art Institute of Chicago \u2014 https://www.artic.edu/artworks/68388",
+      "thumbnail_variant": "A-gallery",
+      "video_id": "UXaweUYJQoQ",
+      "scheduled_for": "2026-12-10T18:00:00+00:00"
     }
   ]
 }
