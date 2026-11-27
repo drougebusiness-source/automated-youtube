@@ -218,7 +218,7 @@ def test_nov10_schedule_mix_and_no_repeats():
     from ytauto.batch import _theme_for
     cfg = load_config()
     mins = [e["minutes"] for e in cfg["schedule"]["videos"]]
-    assert mins == [60, 30, 180]
+    assert mins == [60, 120, 180]  # 1 PM slot is 2 hours since 2026-11-27
     counts = Counter()
     for d in range(28):
         pd = (date(2026, 11, 13) + timedelta(days=d)).isoformat()
