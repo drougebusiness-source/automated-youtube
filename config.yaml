@@ -20,7 +20,7 @@ schedule:
   # "themes" rotates one per day (Nov 10 mix: ~1/3 Rainy Study, 1/3 Deep Sleep, rest Morning
   # Light + Forest Wind, chosen from what performed best). No theme repeats within a day.
     - { minutes: 60, publish_at: "08:00", themes: ["Rainy Study", "Morning Light", "Rainy Study", "Forest Wind"] }
-    - { minutes: 30, publish_at: "13:00", themes: ["Forest Wind", "Rainy Study", "Morning Light", "Rainy Study"] }
+    - { minutes: 120, publish_at: "13:00", themes: ["Forest Wind", "Rainy Study", "Morning Light", "Rainy Study"] }
     - { minutes: 180, publish_at: "20:00", themes: ["Deep Sleep"] }
   # Videos made today are published this many days later. 1 day gives you time
   # to watch the review queue before anything goes public.

@@ -1,8 +1,8 @@
 """Four Shorts a day, each pointing to one of that day's long videos.
 
   07:00 pov     - relatable hook          -> the day's Rainy Study video (else the 1-hour one)
-  12:00 story   - the painting's story    -> the day's 30-minute video
-  16:00 moment  - a piece's high point    -> the day's 15-minute video
+  12:00 story   - the painting's story    -> the day's 1-hour video
+  16:00 moment  - a piece's high point    -> the day's 2-hour video
   21:00 sleep   - wind-down before bed    -> the day's Deep Sleep video (else the 1-hour one)
 
 Paintings and passages differ from each other and from the day's long videos. Painting facts
@@ -32,13 +32,28 @@ log = logging.getLogger(__name__)
 SLOTS = [("pov", "07:00"), ("story", "12:00"), ("moment", "16:00"), ("sleep", "21:00")]
 HOOKS = {
     "Rainy Study": ["POV: it's raining and you still have to study", "POV: 2 AM, one more chapter to go",
-                    "POV: library window, rain outside, deadline tomorrow", "POV: rainy Sunday, notes everywhere"],
-    "Deep Sleep": ["POV: you finally put your phone down", "POV: the house is quiet and the lights are off"],
-    "Morning Light": ["POV: slow morning, coffee still warm", "POV: you woke up before the alarm"],
-    "Forest Wind": ["POV: reading by an open window", "POV: a long walk with nowhere to be"],
+                    "POV: library window, rain outside, deadline tomorrow", "POV: rainy Sunday, notes everywhere",
+                    "POV: rain on the window, tea going cold", "POV: the cafe is empty and it's pouring outside",
+                    "POV: finals week, but the rain makes it okay", "POV: grey afternoon, one page at a time"],
+    "Deep Sleep": ["POV: you finally put your phone down", "POV: the house is quiet and the lights are off",
+                   "POV: fresh sheets and nowhere to be tomorrow", "POV: the rain stopped and the room is dark",
+                   "POV: you can't sleep, so you press play", "POV: the last light in the house goes out",
+                   "POV: a long day is finally over", "POV: your eyes are getting heavy"],
+    "Morning Light": ["POV: slow morning, coffee still warm", "POV: you woke up before the alarm",
+                      "POV: sunlight on the kitchen table", "POV: Sunday morning, windows open",
+                      "POV: the first quiet hour of the day", "POV: breakfast with no rush at all",
+                      "POV: soft light and an empty schedule", "POV: the city hasn't woken up yet"],
+    "Forest Wind": ["POV: reading by an open window", "POV: a long walk with nowhere to be",
+                    "POV: a cabin porch and a cool breeze", "POV: the trees are moving and you're not",
+                    "POV: an afternoon with no notifications", "POV: a bench in the park, a book in your lap",
+                    "POV: leaves outside, a blanket inside", "POV: the trail is empty and the air is cool"],
     "Ocean Meditation": ["POV: waves outside, nowhere to be", "POV: the sea is calm and so are you"],
     "Starlight Focus": ["POV: late-night deep work session", "POV: everyone's asleep and you're finally focused"],
 }
+SLEEP_TITLES = ["Close your eyes: {last} and {painting} for sleep", "Fall asleep to {last} and {painting}",
+                "{last} for sleep, with {painting}", "Drift off: {last} and {painting}",
+                "Sleep music: {last}, with {painting}", "Rest now: {last} and {painting}",
+                "Let {last} carry you to sleep ({painting})", "Quiet night: {last} and {painting}"]
 AIC = "https://api.artic.edu/api/v1/artworks/{id}?fields=title,artist_title,date_display,short_description,medium_display,is_on_view"
 HEADERS = {"AIC-User-Agent": "channel-uploader (automated-youtube)", "User-Agent": "Mozilla/5.0"}
 
@@ -55,6 +70,24 @@ def load(cfg: Config) -> dict:
 def save(cfg: Config, data: dict) -> None:
     cfg.state_dir.mkdir(parents=True, exist_ok=True)
     _path(cfg).write_text(json.dumps(data, indent=2), encoding="utf-8")
+
+
+def _unique(data: dict, candidates: list[str], painting: dict) -> str:
+    """First candidate title (within YouTube's 100 characters) that no earlier Short has used."""
+    used = {i.get("title") for i in data.get("items", [])}
+    fits = [c for c in candidates if len(c) <= 100] or [candidates[0][:100]]
+    for c in fits:
+        if c not in used:
+            return c
+    base = fits[0].replace(" #shorts", "")
+    for extra in (f" ({painting['title']})", f" ({painting['title']}, {painting['date']})"):
+        c = (base[:100 - len(extra) - 8] + extra + " #shorts")
+        if c not in used:
+            return c
+    n = 2
+    while f"{base[:85]} ({n}) #shorts" in used:
+        n += 1
+    return f"{base[:85]} ({n}) #shorts"
 
 
 def _sentences(text: str, max_len: int = 110, count: int = 3) -> list[str]:
@@ -79,7 +112,7 @@ def _link_for(kind: str, longs: list[dict]) -> dict | None:
     longest = max(longs, key=lambda i: i["minutes"]) if longs else None
     pick = {"pov": by_theme.get("Rainy Study") or by_len.get(60) or by_slot.get(0),
             "story": by_len.get(60) or by_slot.get(1),
-            "moment": by_len.get(30) or by_slot.get(2),
+            "moment": by_len.get(120) or by_len.get(30) or by_slot.get(2),
             "sleep": by_len.get(180) or by_theme.get("Deep Sleep") or longest}[kind]
     return pick or (longs[0] if longs else None)
 
@@ -133,7 +166,8 @@ def plan_short(cfg, kind: str, day_index: int, link: dict, avoid_paintings: set[
                 C(f"{last} · {piece.split(':')[0]}", 2, 49.5, 1390, 42, "text", "SemiBold", G),
                 C(cta, 36, 49.5, 1460, 44, "text", "Bold")]
         spec = ShortSpec("pov", p_path, a_path, 50, "start", caps)
-        title = f"{hook} | {last} #shorts"
+        title = _unique(data, [f"{h} | {last} #shorts" for h in hooks[day_index % len(hooks):] + hooks[:day_index % len(hooks)]],
+                        painting)
     elif kind == "story":
         f = facts or _facts(painting["id"])
         lines = _sentences(f.get("short_description") or "")
@@ -152,21 +186,24 @@ def plan_short(cfg, kind: str, day_index: int, link: dict, avoid_paintings: set[
         caps += [C(f"Music: {last}, {piece.split(':')[0]}", 2, 54.5, 1390, 38, "text", "SemiBold", G),
                  C(cta, 45, 54.5, 1460, 44, "text", "Bold")]
         spec = ShortSpec("story", p_path, a_path, 55, "start", caps)
-        title = f"{painting['title']} by {painting['artist'].split(' (')[0]}, with {last} #shorts"
+        title = _unique(data, [f"{painting['title']} by {painting['artist'].split(' (')[0]}, with {last} #shorts"], painting)
     elif kind == "moment":
         caps = [C(composer, 0.3, 11, 300, 78, "display", "Bold"),
                 C(piece, 0.8, 11, 420, 50, "text", "SemiBold", G),
                 C(credit, 2, 49.5, 1390, 38, "text", "SemiBold", G),
                 C(cta, 38, 49.5, 1460, 44, "text", "Bold")]
         spec = ShortSpec("moment", p_path, a_path, 50, "climax", caps)
-        title = f"{last} – {piece.split(':')[0]} #shorts"
+        title = _unique(data, [f"{last} – {piece.split(':')[0]} #shorts",
+                               f"{last} – {piece.split(':')[0]}, with {painting['title']} #shorts"], painting)
     else:  # sleep
         caps = [C("Close your eyes.", 1, 13, 320, 88, "serif", "Bold Italic"),
                 C(f"Let {last} carry you to sleep.", 13, 26, 320, 72, "serif", "Bold Italic"),
                 C(f"{credit}  ·  {last}", 2, 57.5, 1390, 34, "text", "SemiBold", G),
                 C(cta, 44, 57.5, 1450, 44, "text", "Bold")]
         spec = ShortSpec("sleep", p_path, a_path, 58, "start", caps, darken=0.12, reverse=True)
-        title = f"Close your eyes: {last} for sleep #shorts"
+        n = len(SLEEP_TITLES)
+        title = _unique(data, [SLEEP_TITLES[(day_index + k) % n].format(last=last, painting=painting["title"]) + " #shorts"
+                               for k in range(n)], painting)
     url = f"https://youtu.be/{link['video_id']}"
     description = "\n\n".join([p for p in [
         f"Full version: {url}",
